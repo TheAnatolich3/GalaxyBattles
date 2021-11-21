@@ -90,10 +90,10 @@ void Engine::draw_figure(const std::string& file_name)
 				tinyobj::real_t vx_next = attrib.vertices[3 * size_t(idx_next.vertex_index) + 0];
 				tinyobj::real_t vy_next = attrib.vertices[3 * size_t(idx_next.vertex_index) + 1];
 
-				int x0 = (vx + 1.) * SCREEN_WIDTH / 2.;
-				int y0 = (vy + 1.) * SCREEN_HEIGHT / 2.;
-				int x1 = (vx_next + 1.) * SCREEN_WIDTH / 2.;
-				int y1 = (vy_next + 1.) * SCREEN_HEIGHT / 2.;
+				int x0 = static_cast<int>((vx + 1.) * SCREEN_WIDTH / 2.);
+				int y0 = static_cast<int>((vy + 1.) * SCREEN_HEIGHT / 2.);
+				int x1 = static_cast<int>((vx_next + 1.) * SCREEN_WIDTH / 2.);
+				int y1 = static_cast<int>((vy_next + 1.) * SCREEN_HEIGHT / 2.);
 
 				draw_line(SCREEN_WIDTH - x0, SCREEN_HEIGHT - y0, SCREEN_WIDTH - x1, SCREEN_HEIGHT - y1);
 			}
