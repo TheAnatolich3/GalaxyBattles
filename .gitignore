@@ -76,6 +76,7 @@ StyleCopReport.xml
 *.ilk
 *.meta
 *.obj
+!african_head.obj
 *.iobj
 *.pch
 *.pdb
