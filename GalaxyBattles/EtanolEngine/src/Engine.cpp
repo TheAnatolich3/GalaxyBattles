@@ -1,18 +1,47 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <SDL_version.h>
 #include <SDL.h>
-
 #include "Engine.hpp"
 #include "windows.h"
 
-struct Engine::Pimp {
+class Render {
+public:
+	Render();
+	Render(SDL_Renderer* ren_);
+
+	void draw_picture(const std::string& file_name);
+private:
+	struct Point {
+		int x;
+		int y;
+	};
+
+	void read_file(const std::string& file_name, tinyobj::ObjReader& reader);
+	void draw_line(int x0, int y0, int x1, int y1);
+	void draw_triangle(Point t0, Point t1, Point t2);
+
+	void fill_triangle(int y_start, int y_end, int a1, int b1, int c1, int a2, int b2, int c2);
+	SDL_Renderer* ren;
+};
+
+Render::Render() {
+	ren = NULL;
+}
+
+Render::Render(SDL_Renderer* ren_) {
+	ren = ren_;
+}
+
+
+struct Engine::Engine_pimp {
 	SDL_Surface* screen_surface;
 	SDL_Window* window;
 	SDL_Renderer* ren;
 };
 
+
 Engine::Engine() {
-	_pmp = std::make_unique<Engine::Pimp>();
+	_pmp = std::make_unique<Engine::Engine_pimp>();
 	_pmp->screen_surface = NULL;
 	_pmp->window = NULL;
 	_pmp->ren = NULL;
@@ -42,7 +71,7 @@ void Engine::update() {
 	}
 }
 
-void Engine::read_file(const std::string& file_name, tinyobj::ObjReader& reader) {
+void Render::read_file(const std::string& file_name, tinyobj::ObjReader& reader) {
 	tinyobj::ObjReaderConfig reader_config;
 	reader_config.mtl_search_path = "./";
 
@@ -56,18 +85,14 @@ void Engine::read_file(const std::string& file_name, tinyobj::ObjReader& reader)
 	if (!reader.Warning().empty()) {
 		std::cout << "TinyObjReader: " << reader.Warning();
 	}
-
 }
 
-void Engine::draw_figure(const std::string& file_name)
-{
+void Render::draw_picture(const std::string& file_name) {
 	tinyobj::ObjReader reader;
 	this->read_file(file_name, reader);
 
 	auto& attrib = reader.GetAttrib();
 	auto& shapes = reader.GetShapes();
-
-	SDL_SetRenderDrawColor(_pmp->ren, 0xFF, 0xFF, 0x00, 0x00);
 
 	// Loop over shapes
 	for (size_t s = 0; s < shapes.size(); s++) {
@@ -76,34 +101,36 @@ void Engine::draw_figure(const std::string& file_name)
 		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
 			size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
 
+			Point triangle_vertices[3];
 			// Loop over vertices in the face.
 			for (size_t v = 0; v < fv; v++) {
-				// access to vertex
-				size_t v_next = (v + 1) % 3;
 
 				tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-				tinyobj::index_t idx_next = shapes[s].mesh.indices[index_offset + v_next];
 
 				tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
 				tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
 
-				tinyobj::real_t vx_next = attrib.vertices[3 * size_t(idx_next.vertex_index) + 0];
-				tinyobj::real_t vy_next = attrib.vertices[3 * size_t(idx_next.vertex_index) + 1];
-
 				int x0 = static_cast<int>((vx + 1.) * SCREEN_WIDTH / 2.);
 				int y0 = static_cast<int>((vy + 1.) * SCREEN_HEIGHT / 2.);
-				int x1 = static_cast<int>((vx_next + 1.) * SCREEN_WIDTH / 2.);
-				int y1 = static_cast<int>((vy_next + 1.) * SCREEN_HEIGHT / 2.);
 
-				draw_line(SCREEN_WIDTH - x0, SCREEN_HEIGHT - y0, SCREEN_WIDTH - x1, SCREEN_HEIGHT - y1);
+				triangle_vertices[v].x = SCREEN_WIDTH - x0;
+				triangle_vertices[v].y = SCREEN_HEIGHT - y0;
 			}
+
+			draw_triangle(triangle_vertices[0], triangle_vertices[1], triangle_vertices[2]);
 			index_offset += fv;
 		}
 	}
-	SDL_RenderPresent(_pmp->ren);
+	SDL_RenderPresent(ren);
 }
 
-void Engine::draw_line(int x0, int y0, int x1, int y1) {
+void Engine::draw_figure(const std::string& file_name)
+{
+	Render ren = Render(_pmp->ren);
+	ren.draw_picture(file_name);
+}
+
+void Render::draw_line(int x0, int y0, int x1, int y1) {
 	bool steep = false;
 	if (std::abs(x0 - x1) < std::abs(y0 - y1)) {
 		std::swap(x0, y0);
@@ -121,16 +148,70 @@ void Engine::draw_line(int x0, int y0, int x1, int y1) {
 	int y = y0;
 	for (int x = x0; x <= x1; x++) {
 		if (steep) {
-			SDL_RenderDrawPoint(_pmp->ren, y, x);
+			SDL_RenderDrawPoint(ren, y, x);
 		}
 		else {
-			SDL_RenderDrawPoint(_pmp->ren, x, y);
+			SDL_RenderDrawPoint(ren, x, y);
 		}
 		error2 += derror2;
 
 		if (error2 > dx) {
 			y += (y1 > y0 ? 1 : -1);
 			error2 -= dx * 2;
+		}
+	}
+}
+
+void Render::draw_triangle(Point t0, Point t1, Point t2) {
+	SDL_SetRenderDrawColor(ren, rand() % 256, rand() % 256, rand() % 256, rand() % 256);
+	// sort point
+	if (t0.y > t1.y) {
+		std::swap(t0, t1);
+	}
+	if (t0.y > t2.y) {
+		std::swap(t0, t2);
+	}
+	if (t1.y > t2.y) {
+		std::swap(t1, t2);
+	}
+
+	//calc koef lines
+	int a1 = t1.y - t0.y;
+	int b1 = t0.x - t1.x;
+	int c1 = t1.x * t0.y - t1.y * t0.x;
+
+	int a2 = t2.y - t0.y;
+	int b2 = t0.x - t2.x;
+	int c2 = t2.x * t0.y - t2.y * t0.x;
+	if (a1 == 0) {
+		draw_line(t0.x, t0.y, t1.x, t1.y);
+	}
+	else {
+		fill_triangle(t0.y, t1.y, a1, b1, c1, a2, b2, c2);
+	}
+
+	a1 = t1.y - t2.y;
+	b1 = t2.x - t1.x;
+	c1 = t1.x * t2.y - t1.y * t2.x;
+	if (a1 == 0) {
+		draw_line(t1.x, t1.y, t2.x, t2.y);
+	}
+	else
+	{ 
+		fill_triangle(t1.y, t2.y, a1, b1, c1, a2, b2, c2);
+	}
+}
+
+
+void Render::fill_triangle(int y_start, int y_end, int a1, int b1, int c1, int a2, int b2, int c2) {
+	for (int y = y_start; y <= y_end; ++y) {
+		int x_start = -(b1 * y + c1) / a1;
+		int x_end = -(b2 * y + c2) / a2;
+		if (x_start > x_end) {
+			std::swap(x_start, x_end);
+		}
+		for (int j = x_start; j <= x_end; ++j) {
+			SDL_RenderDrawPoint(ren, j, y);
 		}
 	}
 }

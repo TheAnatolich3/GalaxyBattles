@@ -1,6 +1,7 @@
 ﻿// GalaxyBattles.cpp: определяет точку входа для приложения.
 //
-#include <iostream>
+#pragma once
+
 #include "EtanolEngine/src/Engine.hpp"
 using namespace std;
 
@@ -8,7 +9,7 @@ int main()
 {
 	Engine engine{};
 	engine.init("GalaxyBattles");
-	engine.draw_figure("../../../../GalaxyBattles/EtanolEngine/resource/african_head.obj");\
+	engine.draw_figure("../../../../GalaxyBattles/EtanolEngine/resource/african_head.obj");
 
 	while (engine.isActive()) {
 		engine.update();

@@ -1,6 +1,4 @@
-#include <cstdio>
 #include <string>
-#include <memory>
 #include <iostream>
 #include "tiny_obj_loader.h"
 
@@ -14,12 +12,12 @@ public:
 	void init(std::string name_window);
 	void update();
 	bool isActive();
+
 	void draw_figure(const std::string& file_name);
 private:
-	void read_file(const std::string& file_name, tinyobj::ObjReader& reader);
-	void draw_line(int x0, int y0, int x1, int y1);
-
-	struct Pimp;
+	
+	struct Engine_pimp;
 	bool is_active;
-	std::unique_ptr<Pimp> _pmp;
+	std::unique_ptr<Engine_pimp> _pmp;
 };
+

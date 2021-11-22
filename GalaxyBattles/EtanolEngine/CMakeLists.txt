@@ -1,4 +1,4 @@
-add_library(EtanolEngine STATIC src/Engine.hpp src/Engine.cpp)
+add_library(EtanolEngine STATIC src/Engine.hpp src/Engine.cpp  )
 
 #SDL
 if(NOT IOS)
