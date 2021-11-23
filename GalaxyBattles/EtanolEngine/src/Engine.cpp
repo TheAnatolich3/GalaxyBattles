@@ -1,6 +1,9 @@
 #define TINYOBJLOADER_IMPLEMENTATION
+#define GLEW_STATIC
 #include <SDL_version.h>
 #include <SDL.h>
+#include <GL/glew.h>
+//#include <SDL_opengles.h>
 #include "Engine.hpp"
 #include "windows.h"
 
@@ -25,7 +28,7 @@ private:
 };
 
 Render::Render() {
-	ren = NULL;
+	ren = nullptr;
 }
 
 Render::Render(SDL_Renderer* ren_) {
@@ -55,9 +58,21 @@ bool Engine::isActive() {
 }
 
 void Engine::init(std::string name_window) {
-	_pmp->window = SDL_CreateWindow(name_window.c_str(), SDL_WINDOWPOS_UNDEFINED,
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+	_pmp->window = SDL_CreateWindow(name_window.c_str(), SDL_WINDOWPOS_UNDEFINED ,
 								SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
-								SDL_WINDOW_SHOWN);
+								SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	auto context = SDL_GL_CreateContext(_pmp->window);
+	GLenum res = glewInit();
+	if (res != GLEW_OK)
+	{
+		throw std::runtime_error("Glew error");
+	}
 
 	_pmp->screen_surface = SDL_GetWindowSurface(_pmp->window);
 	_pmp->ren = SDL_CreateRenderer(_pmp->window, -1, SDL_RENDERER_ACCELERATED);
@@ -69,6 +84,9 @@ void Engine::update() {
 	if (e.type == SDL_QUIT) {
 		is_active = false;
 	}
+	glClearColor(1.0, 0.0, 0.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	SDL_GL_SwapWindow(_pmp->window);
 }
 
 void Render::read_file(const std::string& file_name, tinyobj::ObjReader& reader) {
