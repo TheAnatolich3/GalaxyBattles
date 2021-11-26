@@ -3,9 +3,32 @@
 #include <SDL_version.h>
 #include <SDL.h>
 #include <GL/glew.h>
+#include <istream>
 //#include <SDL_opengles.h>
 #include "Engine.hpp"
 #include "windows.h"
+
+void check_errors(std::string file, int line)
+{
+	GLenum err(glGetError());
+
+	while (err != GL_NO_ERROR)
+	{
+		std::string error;
+
+		switch (err)
+		{
+		case GL_INVALID_OPERATION: error = "INVALID_OPERATION"; break;
+		case GL_INVALID_ENUM: error = "INVALID_ENUM"; break;
+		case GL_INVALID_VALUE: error = "INVALID_VALUE"; break;
+		case GL_OUT_OF_MEMORY: error = "OUT_OF_MERORY"; break;
+		case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+		default: error = "UNKNOWN"; break;
+		}
+		std::cerr << "GL_" << error << " : 0x" << std::hex << err << std::dec << " - " << file << ": " << line << std::endl;
+		err = glGetError();
+	}
+}
 
 class Render {
 public:
@@ -42,6 +65,9 @@ struct Engine::Engine_pimp {
 	SDL_Renderer* ren;
 };
 
+GLuint _VAO;
+int _uScreenSize;
+GLuint _program;
 
 Engine::Engine() {
 	_pmp = std::make_unique<Engine::Engine_pimp>();
@@ -57,7 +83,10 @@ bool Engine::isActive() {
 	return is_active;
 }
 
-void Engine::init(std::string name_window) {
+
+void Engine::init(std::string name_window)
+{
+	
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -68,6 +97,7 @@ void Engine::init(std::string name_window) {
 								SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
 								SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	auto context = SDL_GL_CreateContext(_pmp->window);
+	glewExperimental = GL_TRUE;
 	GLenum res = glewInit();
 	if (res != GLEW_OK)
 	{
@@ -76,6 +106,108 @@ void Engine::init(std::string name_window) {
 
 	_pmp->screen_surface = SDL_GetWindowSurface(_pmp->window);
 	_pmp->ren = SDL_CreateRenderer(_pmp->window, -1, SDL_RENDERER_ACCELERATED);
+
+	struct Vertex
+	{
+		float x, y;
+	};
+
+	struct Triangle
+	{
+		Vertex v1, v2, v3;
+	};
+
+	Triangle t{ {700, 100}, {200, 300}, {400, 400} };
+
+	GLuint _VBO, _IBO;
+	uint32_t indexes[3] = { 0, 1, 2 };
+	glGenVertexArrays(1, &_VAO);
+	glBindVertexArray(_VAO);
+	check_errors("Engine.cpp", 79);
+
+	glGenBuffers(1, &_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+	glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex), &t, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, x)));
+	check_errors("Engine.cpp", 86);
+
+
+	glGenBuffers(1, &_IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes), indexes, GL_STATIC_DRAW);
+	check_errors("Engine.cpp", 92);
+
+	std::ifstream in("../../../../GalaxyBattles/EtanolEngine/src/shader.vert");
+	std::ifstream in_frag("../../../../GalaxyBattles/EtanolEngine/src/frag_shader.vert");
+	std::string shader_text, frag_shader_text, line;
+
+	if (in.is_open())
+	{
+		while (!in.eof())
+		{
+			getline(in, line);
+			shader_text += line;
+			shader_text += '\n';
+		}
+	}
+	in.close();
+
+	if (in_frag.is_open())
+	{
+		while (!in_frag.eof())
+		{
+			getline(in_frag, line);
+			frag_shader_text += line;
+			frag_shader_text += '\n';
+		}
+	}
+	in_frag.close();
+
+	GLuint _vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	const char* s_text = shader_text.c_str();
+	glShaderSource(_vertexShader, 1, &s_text, nullptr);
+	glCompileShader(_vertexShader);
+
+	GLint success;
+	GLchar infoLog[512];
+	glGetShaderiv(_vertexShader, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(_vertexShader, 512, nullptr, infoLog);
+		std::cerr << shader_text << "\nVertex error\n:" << infoLog;
+	}
+
+	GLuint _fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	const char* f_text = frag_shader_text.c_str();
+	glShaderSource(_fragmentShader, 1, &f_text, nullptr);
+	glCompileShader(_fragmentShader);
+
+	
+	glGetShaderiv(_fragmentShader, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(_fragmentShader, 512, nullptr, infoLog);
+		std::cerr << frag_shader_text << "\Fragment error\n:" << infoLog;
+	}
+
+	_program = glCreateProgram();
+	glAttachShader(_program, _vertexShader);
+	glAttachShader(_program, _fragmentShader);
+	glLinkProgram(_program);
+
+	glGetProgramiv(_program, GL_LINK_STATUS, &success);
+
+	if (!success)
+	{
+		glGetProgramInfoLog(_program, 512, nullptr, infoLog);
+		std::cerr << "ERROR::SHADER::LINKING_FAILED\n" << infoLog << std::endl;
+	}
+
+	glUseProgram(_program);
+	_uScreenSize = glGetUniformLocation(_program, "screenSize");
 }
 
 void Engine::update() {
@@ -84,10 +216,22 @@ void Engine::update() {
 	if (e.type == SDL_QUIT) {
 		is_active = false;
 	}
+	
+
 	glClearColor(1.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	glUseProgram(_program);
+	glUniform2f(_uScreenSize, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	glBindVertexArray(_VAO);
+	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+
 	SDL_GL_SwapWindow(_pmp->window);
 }
+
+
+
 
 void Render::read_file(const std::string& file_name, tinyobj::ObjReader& reader) {
 	tinyobj::ObjReaderConfig reader_config;

@@ -9,7 +9,7 @@ int main()
 {
 	Engine engine{};
 	engine.init("GalaxyBattles");
-	engine.draw_figure("../../../../GalaxyBattles/EtanolEngine/resource/african_head.obj");
+	//engine.draw_figure("../../../../GalaxyBattles/EtanolEngine/resource/african_head.obj");
 
 	while (engine.isActive()) {
 		engine.update();
