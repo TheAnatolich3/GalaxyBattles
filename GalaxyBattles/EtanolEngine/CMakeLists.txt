@@ -1,4 +1,10 @@
-add_library(EtanolEngine STATIC src/Engine.hpp src/Engine.cpp)
+add_library(EtanolEngine STATIC src/Engine.hpp src/Engine.cpp "src/Window.hpp" "src/SDL/SDLWindow.hpp" "src/SDL/SDLWindow.cpp" "src/EventsManager.hpp" "src/EventsManager.cpp" "src/Renderer.hpp" "src/SDL/SDLRenderer.hpp" "src/SDL/SDLRenderer.cpp" "src/Renderer.cpp" "src/GL/GLRenderer.hpp" "src/GL/GLRenderer.cpp")
+
+set_target_properties(EtanolEngine PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
+)
 
 #SDL
 if(NOT IOS)

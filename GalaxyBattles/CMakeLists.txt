@@ -6,6 +6,12 @@ cmake_minimum_required (VERSION 3.8)
 # Добавьте источник в исполняемый файл этого проекта.
 add_executable (GalaxyBattles "main.cpp")
 
+set_target_properties(GalaxyBattles PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
+)
+
 add_subdirectory("EtanolEngine")
 target_link_libraries(GalaxyBattles EtanolEngine)
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.
