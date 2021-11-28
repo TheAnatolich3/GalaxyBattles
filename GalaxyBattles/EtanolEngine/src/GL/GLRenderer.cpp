@@ -88,8 +88,7 @@ GLRenderer::GLRenderer(const Engine& engine, SDL_Window* window)
 		400.0f, 400.0f,   0.0f, 0.0f, 1.0f    // верхн€€ вершина
 	};
 
-	GLuint _VBO, _IBO;
-	uint32_t indexes[3] = { 0, 1, 2 };
+	GLuint _VBO;
 	glGenVertexArrays(1, &_VAO);
 	glBindVertexArray(_VAO);
 	check_errors("GL_Renderer.cpp", 54);
@@ -108,9 +107,6 @@ GLRenderer::GLRenderer(const Engine& engine, SDL_Window* window)
 	
 	check_errors("GL_Renderer.cpp", 61);
 
-	glGenBuffers(1, &_IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes), indexes, GL_STATIC_DRAW);
 	check_errors("GL_Renderer.cpp", 67);
 
 	std::string shader_text, frag_shader_text;
@@ -151,5 +147,5 @@ void GLRenderer::draw()
 	glUniform2f(_uScreenSize, _engine.get_window_width(), _engine.get_window_height());
 
 	glBindVertexArray(_VAO);
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
