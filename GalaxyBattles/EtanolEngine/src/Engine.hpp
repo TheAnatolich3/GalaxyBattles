@@ -13,7 +13,7 @@ class Engine : public EventsManager::Delegate{
 public:
 	struct Vertex
 	{
-		float x, y;
+		float x, y, r, g, b;
 	};
 
 	struct Triangle

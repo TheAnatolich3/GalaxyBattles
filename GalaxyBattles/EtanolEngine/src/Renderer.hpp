@@ -2,8 +2,6 @@
 #ifndef GAME_RENDERER_HPP
 #define GAME_RENDERER_HPP
 
-#include <vector>
-#include <string_view>
 #include <Engine.hpp>
 
 class Renderer

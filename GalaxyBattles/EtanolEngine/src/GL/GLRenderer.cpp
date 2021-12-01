@@ -1,7 +1,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-
+#include "Sprite.hpp"
 #include "GLRenderer.hpp"
 
 void check_errors(std::string_view file, int line)
@@ -81,21 +81,44 @@ GLRenderer::GLRenderer(const Engine& engine, SDL_Window* window)
 
 	VertexTriangle t {700, 100, 200, 300, 400, 400 };*/
 
-	float vertices[] = {
-		// координаты  // цвета
-		700.0f, 100.0f,   1.0f, 0.0f, 0.0f,   // нижн€€ права€ вершина
-	    200.0f, 300.0f,   0.0f, 1.0f, 0.0f,   // нижн€€ лева€ вершина
-		400.0f, 400.0f,   0.0f, 0.0f, 1.0f    // верхн€€ вершина
-	};
+	Sprite spr;
+	spr.add_element(Engine::Triangle{ 200, 200, 1, 0, 0, 400, 200, 0, 1, 0, 200, 400, 0, 0, 1 });
+	spr.add_element(Engine::Triangle{ 400, 400, 1, 0, 0, 400, 200, 0, 1, 0, 200, 400, 0, 0, 1 });
+	//spr.add_element(Engine::Triangle{ 200, 400, 1, 0, 0, 400, 400, 0, 1, 0, 300, 500, 0, 0, 1 });
 
-	GLuint _VBO;
+	unsigned int indices[] = { 0, 1, 2, 1, 2, 3 };
+	//spr.transform(1, 1, 300, 0);
+	GLuint _EBO, _VBO;
 	glGenVertexArrays(1, &_VAO);
 	glBindVertexArray(_VAO);
 	check_errors("GL_Renderer.cpp", 54);
 
 	glGenBuffers(1, &_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &_EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	_el_cnt = spr.get_size();
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Engine::Triangle) * _el_cnt, spr.get_data(), GL_STATIC_DRAW);
+
+
+	/*float vertices[] = {
+		// координаты  // цвета
+		700.0f, 100.0f,   1.0f, 0.0f, 0.0f,   // нижн€€ права€ вершина
+	    200.0f, 300.0f,   0.0f, 1.0f, 0.0f,   // нижн€€ лева€ вершина
+		400.0f, 400.0f,   0.0f, 0.0f, 1.0f    // верхн€€ вершина
+	};*/
+
+	/*GLuint _VBO;
+	glGenVertexArrays(1, &_VAO);
+	glBindVertexArray(_VAO);
+	check_errors("GL_Renderer.cpp", 54);
+
+	glGenBuffers(1, &_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);*/
 
 	/* оординаты*/
 	glEnableVertexAttribArray(0);
@@ -140,6 +163,7 @@ GLRenderer::GLRenderer(const Engine& engine, SDL_Window* window)
 
 void GLRenderer::draw()
 {
+	glDisable(GL_CULL_FACE);
     glClearColor(0.0, 1.0, 1.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -147,5 +171,5 @@ void GLRenderer::draw()
 	glUniform2f(_uScreenSize, _engine.get_window_width(), _engine.get_window_height());
 
 	glBindVertexArray(_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, 3 * _el_cnt, GL_UNSIGNED_INT, 0);
 }

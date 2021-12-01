@@ -11,12 +11,14 @@ public:
 	GLRenderer(const Engine& engine, SDL_Window* window);
 	void draw() override;
 private:
-	GLuint _VAO, _program;
+	GLuint _program, _VAO;
+	size_t _el_cnt;
 	int _uScreenSize;
 	const Engine& _engine;
 	std::unique_ptr<void, void(*)(void*)> _drawContext;
 
 	void read_file(const std::string_view file_name, std::string& text);
 	void gen_shader(GLuint id, std::string shader_text);
+	void draw_triangle(Engine::Triangle tr);
 };
 #endif
