@@ -51,12 +51,40 @@ SDLWindow::SDLWindow(const Engine& engine,
 void SDLWindow::update()
 {
     SDL_Event e;
-    const auto& event_manager = _engine.get_event_manager();
+    const auto& event_manager = _engine.eventsManager();
 
     SDL_PollEvent(&e);
     if (e.type == SDL_QUIT) 
     {
          event_manager.invoke_event(EventsManager::QuitEvent{});
+    }
+    else if (e.type == SDL_KEYDOWN)
+    {
+        switch (e.key.keysym.sym)
+        {
+        case SDLK_DOWN: 
+            event_manager.invoke_event(EventsManager::KeyDownEvent{});
+            break;
+        case SDLK_UP:
+            event_manager.invoke_event(EventsManager::KeyUpEvent{});
+            break;
+        case SDLK_LEFT:
+            event_manager.invoke_event(EventsManager::KeyLeftEvent{});
+            break;
+        case SDLK_RIGHT:
+            event_manager.invoke_event(EventsManager::KeyRightEvent{});
+            break;
+        case SDLK_SPACE:
+            event_manager.invoke_event(EventsManager::KeySpaceEvent{});
+            break;
+        case SDLK_a:
+            event_manager.invoke_event(EventsManager::KeyAEvent{});
+            break;
+        case SDLK_d:
+            event_manager.invoke_event(EventsManager::KeyDEvent{});
+            break;
+        default: break;
+        }
     }
 }
 

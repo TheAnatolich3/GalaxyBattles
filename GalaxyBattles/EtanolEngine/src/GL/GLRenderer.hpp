@@ -10,15 +10,11 @@ class GLRenderer : public Renderer
 public:
 	GLRenderer(const Engine& engine, SDL_Window* window);
 	void draw() override;
+	std::shared_ptr<VertexBuffer> createVertexBuffer(MeshData data) const override;
+	std::shared_ptr<ShaderProgram> createProgram(std::string_view name) const override;
+	std::shared_ptr<Texture> createTexture(Bitmap bitmap) const override;
 private:
-	GLuint _program, _VAO;
-	size_t _el_cnt;
-	int _uScreenSize;
 	const Engine& _engine;
 	std::unique_ptr<void, void(*)(void*)> _drawContext;
-
-	void read_file(const std::string_view file_name, std::string& text);
-	void gen_shader(GLuint id, std::string shader_text);
-	void draw_triangle(Engine::Triangle tr);
 };
 #endif

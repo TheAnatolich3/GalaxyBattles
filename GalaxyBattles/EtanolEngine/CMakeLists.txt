@@ -1,10 +1,7 @@
-add_library(EtanolEngine STATIC src/Engine.hpp src/Engine.cpp "src/Window.hpp" "src/SDL/SDLWindow.hpp" "src/SDL/SDLWindow.cpp" "src/EventsManager.hpp" "src/EventsManager.cpp" "src/Renderer.hpp" "src/SDL/SDLRenderer.hpp" "src/SDL/SDLRenderer.cpp" "src/Renderer.cpp" "src/GL/GLRenderer.hpp" "src/GL/GLRenderer.cpp" "src/GL/Sprite.hpp" "src/GL/Sprite.cpp")
+set(CMAKE_CXX_STANDARD 17)
 
-set_target_properties(EtanolEngine PROPERTIES
-    CXX_STANDARD 17
-    CXX_STANDARD_REQUIRED YES
-    CXX_EXTENSIONS NO
-)
+add_library(EtanolEngine STATIC src/Engine.hpp src/Engine.cpp "src/Window.hpp" "src/SDL/SDLWindow.hpp" "src/SDL/SDLWindow.cpp" "src/EventsManager.hpp" "src/EventsManager.cpp" "src/Renderer.hpp" "src/SDL/SDLRenderer.hpp" "src/SDL/SDLRenderer.cpp" "src/Renderer.cpp" "src/GL/GLRenderer.hpp" "src/GL/GLRenderer.cpp" "src/Sprite.hpp" "src/Sprite.cpp" "src/Bitmap.hpp" "src/Bitmap.cpp" "src/Node.hpp" "src/Node.cpp" "src/ShaderProgram.hpp" "src/MeshData.hpp" "src/GL/GLVertexBuffer.hpp" "src/VertexBuffer.hpp" "src/VertexBuffer.cpp" "src/GL/GLVertexBuffer.cpp" "src/GL/GLProgram.hpp" "src/GL/GLProgram.cpp" "src/GL/GLTexture.hpp" "src/GL/GLTexture.cpp" "src/Texture.hpp" "src/Texture.cpp" "src/GL/GLDrawProgram.hpp" "src/GL/GLDrawProgram.cpp")
+
 
 #SDL
 if(NOT IOS)
@@ -25,6 +22,7 @@ find_package(OpenGL REQUIRED)
 target_include_directories(EtanolEngine 
 	PUBLIC 
 		${CMAKE_CURRENT_SOURCE_DIR}/src
+		${CMAKE_CURRENT_SOURCE_DIR}/libs
 	PRIVATE
 		${CMAKE_CURRENT_SOURCE_DIR}/libs/SDL2/include
 		${CMAKE_CURRENT_SOURCE_DIR}/libs/glew/include)

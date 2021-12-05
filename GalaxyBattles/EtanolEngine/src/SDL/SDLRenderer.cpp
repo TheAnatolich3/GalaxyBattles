@@ -112,3 +112,18 @@ void SDLRenderer::fill_triangle(int y_start, int y_end, int a1, int b1, int c1, 
 	}
 }
 
+std::shared_ptr<VertexBuffer> SDLRenderer::createVertexBuffer(MeshData data) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<ShaderProgram> SDLRenderer::createProgram(std::string_view name) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<Texture> SDLRenderer::createTexture(Bitmap bitmap) const
+{
+	return nullptr;
+}
+

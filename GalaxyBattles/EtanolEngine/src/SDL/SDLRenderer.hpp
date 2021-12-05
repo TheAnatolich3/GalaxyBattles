@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <memory>
 #include <string_view>
+#include <Bitmap.hpp>
 
 class Engine;
 class SDLRenderer final : public Renderer
@@ -15,6 +16,9 @@ public:
     };
 
     explicit SDLRenderer(const Engine& engine, std::shared_ptr<SDL_Window> sdlWindow);
+    std::shared_ptr<VertexBuffer> createVertexBuffer(MeshData data) const override;
+    std::shared_ptr<ShaderProgram> createProgram(std::string_view name) const override;
+    std::shared_ptr<Texture> createTexture(Bitmap bitmap) const override;
 
     void draw() override;
 private:

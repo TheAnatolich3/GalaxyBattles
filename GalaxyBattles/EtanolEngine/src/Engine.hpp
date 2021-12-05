@@ -5,9 +5,11 @@
 #include <string_view>
 #include <iostream>
 #include <EventsManager.hpp>
+#include <memory>
 
 class Window;
 class Renderer;
+class Node;
 
 class Engine : public EventsManager::Delegate{
 public:
@@ -29,13 +31,25 @@ public:
 	void update();
 	bool isActive();
 
-	const EventsManager& get_event_manager() const;
 	void handle_event(EventsManager::QuitEvent ev);
+	void handle_event(EventsManager::KeyDownEvent ev);
+	void handle_event(EventsManager::KeyUpEvent ev);
+	void handle_event(EventsManager::KeyLeftEvent ev);
+	void handle_event(EventsManager::KeyRightEvent ev);
+	void handle_event(EventsManager::KeySpaceEvent ev);
+	void handle_event(EventsManager::KeyAEvent ev);
+	void handle_event(EventsManager::KeyDEvent ev);
 
 	void load_picture(std::vector<Triangle> model);
 
 	size_t get_window_width() const;
 	size_t get_window_height() const;
+
+	[[nodiscard]] const EventsManager& eventsManager() const;
+	[[nodiscard]] const Renderer& renderer() const;
+	[[nodiscard]] const Window& window() const;
+
+	std::shared_ptr<Node> scene();
 private:
 	
 	bool _isActive = false;
@@ -43,6 +57,8 @@ private:
 	std::unique_ptr<Window> _window;
 	std::unique_ptr<EventsManager> _eventsManager;
 	std::unique_ptr<Renderer> _renderer;
+
+	std::shared_ptr<Node> _scene;
 };
 
 #endif ENGINE_HPP

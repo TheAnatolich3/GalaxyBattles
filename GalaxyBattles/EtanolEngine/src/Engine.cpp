@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <SDL/SDLWindow.hpp>
 #include <Renderer.hpp>
+#include <Node.hpp>
+#include <memory>
 #include "Engine.hpp"
 
 Engine::Engine() {
@@ -28,24 +30,85 @@ void Engine::init(std::string_view name_window, size_t width, size_t height, std
 	_isActive = true;
 	_window = std::make_unique<SDLWindow>(*this, name_window.data(), width, height, mode);
 	_renderer = _window->createRenderer();
+	_scene = std::make_shared<Node>();
 }
 
 void Engine::update() {
 	_window->update();
+	_scene->visit();
 	_renderer->draw();
 	_window->swap();
 }
 
 
-const EventsManager& Engine::get_event_manager() const
+const EventsManager& Engine::eventsManager() const
 {
 	return *_eventsManager;
+}
+
+const Renderer& Engine::renderer() const
+{
+	return *_renderer;
+}
+[[nodiscard]] const Window& Engine::window() const
+{
+	return *_window;
 }
 
 void Engine::handle_event(EventsManager::QuitEvent ev)
 {
 	_isActive = false;
 }
+
+void Engine::handle_event(EventsManager::KeyDownEvent ev)
+{
+	_scene->setPosition(glm::vec2(_scene->getPosition().x, _scene->getPosition().y + 1));
+}
+
+
+void Engine::handle_event(EventsManager::KeyUpEvent ev)
+{
+	_scene->setPosition(glm::vec2(_scene->getPosition().x, _scene->getPosition().y - 1));
+}
+
+void Engine::handle_event(EventsManager::KeyLeftEvent ev)
+{
+	_scene->setPosition(glm::vec2(_scene->getPosition().x - 1, _scene->getPosition().y));
+}
+
+void Engine::handle_event(EventsManager::KeyRightEvent ev)
+{
+	_scene->setPosition(glm::vec2(_scene->getPosition().x + 1, _scene->getPosition().y));
+}
+
+void Engine::handle_event(EventsManager::KeySpaceEvent ev)
+{
+	std::cout << "BOOM!" << std::endl;
+}
+
+
+void Engine::handle_event(EventsManager::KeyAEvent ev)
+{
+	for (auto child : _scene->getChilds())
+	{
+		for (auto ch : child->getChilds())
+		{
+			ch->setRotation(ch->getRotation() - 2);
+		}
+	}
+}
+
+void Engine::handle_event(EventsManager::KeyDEvent ev)
+{
+	for (auto child : _scene->getChilds())
+	{
+		for (auto ch : child->getChilds())
+		{
+			ch->setRotation(ch->getRotation() + 2);
+		}
+	}
+}
+
 
 void Engine::load_picture(std::vector<Triangle> model)
 {
@@ -60,4 +123,9 @@ size_t Engine::get_window_width() const
 size_t Engine::get_window_height() const
 {
 	return _window->getHeight();
+}
+
+std::shared_ptr<Node> Engine::scene()
+{
+	return _scene;
 }
