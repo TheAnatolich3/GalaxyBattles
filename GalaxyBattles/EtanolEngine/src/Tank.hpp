@@ -9,13 +9,6 @@ public:
 
 	void handle_event(EventsManager::QuitEvent) override;
 	void handle_event(EventsManager::KeyEvent) override;
-	/*void handle_event(EventsManager::KeyDownEvent) override;
-	void handle_event(EventsManager::KeyUpEvent) override;
-	void handle_event(EventsManager::KeyLeftEvent) override;
-	void handle_event(EventsManager::KeyRightEvent) override;
-	void handle_event(EventsManager::KeySpaceEvent) override;
-	void handle_event(EventsManager::KeyAEvent) override;
-	void handle_event(EventsManager::KeyDEvent) override;*/
 	
 	void visitSelf() override;
 private:

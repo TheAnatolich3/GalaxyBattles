@@ -108,8 +108,6 @@ void Tank::visitSelf()
     std::chrono::duration<float> delta = now - _prevTime;
     _prevTime = now;
 
-    //constexpr auto barrelSpeed = 70.0f;
-
     if (_isA)
     {
         _head->setRotation(_head->getRotation() - 0.3);

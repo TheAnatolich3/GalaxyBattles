@@ -34,14 +34,6 @@ public:
 	void handle_event(EventsManager::QuitEvent ev);
 	void handle_event(EventsManager::KeyEvent);
 
-	/*void handle_event(EventsManager::KeyDownEvent ev);
-	void handle_event(EventsManager::KeyUpEvent ev);
-	void handle_event(EventsManager::KeyLeftEvent ev);
-	void handle_event(EventsManager::KeyRightEvent ev);
-	void handle_event(EventsManager::KeySpaceEvent ev);
-	void handle_event(EventsManager::KeyAEvent ev);
-	void handle_event(EventsManager::KeyDEvent ev);*/
-
 	void load_picture(std::vector<Triangle> model);
 
 	size_t get_window_width() const;
