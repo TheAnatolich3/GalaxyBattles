@@ -3,7 +3,6 @@
 #include <Renderer.hpp>
 #include <SDL.h>
 #include <GL/glew.h>
-class SDL_Window;
 
 class GLRenderer : public Renderer
 {

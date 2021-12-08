@@ -1,5 +1,3 @@
-#pragma once
-#define GLEW_STATIC
 #include <algorithm>
 #include <SDL/SDLWindow.hpp>
 #include <Renderer.hpp>
@@ -7,8 +5,8 @@
 #include <memory>
 #include "Engine.hpp"
 
-Engine::Engine() {
-	_eventsManager = std::make_unique<EventsManager>();
+Engine::Engine(std::shared_ptr<EventsManager> ea) {
+	_eventsManager = ea;
 	_eventsManager->add_delegate(this);
 }
 
@@ -60,53 +58,46 @@ void Engine::handle_event(EventsManager::QuitEvent ev)
 	_isActive = false;
 }
 
-void Engine::handle_event(EventsManager::KeyDownEvent ev)
+//void Engine::handle_event(EventsManager::KeyDownEvent ev)
+//{
+//	_scene->setPosition(glm::vec2(_scene->getPosition().x, _scene->getPosition().y + 1));
+//}
+//
+//
+//void Engine::handle_event(EventsManager::KeyUpEvent ev)
+//{
+//	_scene->setPosition(glm::vec2(_scene->getPosition().x, _scene->getPosition().y - 1));
+//}
+//
+//void Engine::handle_event(EventsManager::KeyLeftEvent ev)
+//{
+//	_scene->setPosition(glm::vec2(_scene->getPosition().x - 1, _scene->getPosition().y));
+//}
+//
+//void Engine::handle_event(EventsManager::KeyRightEvent ev)
+//{
+//	_scene->setPosition(glm::vec2(_scene->getPosition().x + 1, _scene->getPosition().y));
+//}
+//
+//void Engine::handle_event(EventsManager::KeySpaceEvent ev)
+//{
+//	std::cout << "BOOM!" << std::endl;
+//}
+//
+//
+//void Engine::handle_event(EventsManager::KeyAEvent ev)
+//{
+//
+//}
+//
+//void Engine::handle_event(EventsManager::KeyDEvent ev)
+//{
+//
+//}
+
+void Engine::handle_event(EventsManager::KeyEvent ev)
 {
-	_scene->setPosition(glm::vec2(_scene->getPosition().x, _scene->getPosition().y + 1));
-}
 
-
-void Engine::handle_event(EventsManager::KeyUpEvent ev)
-{
-	_scene->setPosition(glm::vec2(_scene->getPosition().x, _scene->getPosition().y - 1));
-}
-
-void Engine::handle_event(EventsManager::KeyLeftEvent ev)
-{
-	_scene->setPosition(glm::vec2(_scene->getPosition().x - 1, _scene->getPosition().y));
-}
-
-void Engine::handle_event(EventsManager::KeyRightEvent ev)
-{
-	_scene->setPosition(glm::vec2(_scene->getPosition().x + 1, _scene->getPosition().y));
-}
-
-void Engine::handle_event(EventsManager::KeySpaceEvent ev)
-{
-	std::cout << "BOOM!" << std::endl;
-}
-
-
-void Engine::handle_event(EventsManager::KeyAEvent ev)
-{
-	for (auto child : _scene->getChilds())
-	{
-		for (auto ch : child->getChilds())
-		{
-			ch->setRotation(ch->getRotation() - 2);
-		}
-	}
-}
-
-void Engine::handle_event(EventsManager::KeyDEvent ev)
-{
-	for (auto child : _scene->getChilds())
-	{
-		for (auto ch : child->getChilds())
-		{
-			ch->setRotation(ch->getRotation() + 2);
-		}
-	}
 }
 
 

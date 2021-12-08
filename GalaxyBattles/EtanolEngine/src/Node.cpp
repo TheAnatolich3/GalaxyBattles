@@ -5,7 +5,7 @@ void Node::addNode(std::shared_ptr<Node> node)
 {
 	if (node != nullptr)
 	{
-		node->_parent = shared_from_this();
+		node->_parent = this;
 		_nodes.push_back(std::move(node));
 	}
 }
@@ -21,7 +21,7 @@ void Node::removeFromParent()
 	_parent->removeNode(shared_from_this());
 }
 
-std::shared_ptr<Node> Node::getParent()
+Node* Node::getParent()
 {
 	return _parent;
 }
@@ -90,12 +90,12 @@ glm::mat3 Node::getTransform()
 		glm::mat3 trans(1.0f);
 
 		trans = glm::translate(trans, _position);
-		
-		trans = glm::translate(trans, glm::vec2(_anchor.x, _anchor.y));
-		trans = glm::rotate(trans, glm::radians(_rotation));
-		trans = glm::translate(trans, glm::vec2(-_anchor.x,-_anchor.y));
-
 		trans = glm::scale(trans, _scale);
+		trans = glm::rotate(trans, glm::radians(_rotation));
+
+		trans = glm::translate(trans, -glm::vec2(_anchor.x * _contentSize.x,
+			_anchor.y * _contentSize.y));
+
 		_transform = trans;
 		return _parent ? (getParent()->getTransform() * trans) : trans;
 	}

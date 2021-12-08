@@ -23,7 +23,7 @@ public:
 		Vertex v1, v2, v3;
 	};
 
-	explicit Engine();
+	explicit Engine(std::shared_ptr<EventsManager> ea);
 	~Engine();
 
 	void init(std::string_view name_window, size_t width, size_t height, std::string mode_input);
@@ -32,13 +32,15 @@ public:
 	bool isActive();
 
 	void handle_event(EventsManager::QuitEvent ev);
-	void handle_event(EventsManager::KeyDownEvent ev);
+	void handle_event(EventsManager::KeyEvent);
+
+	/*void handle_event(EventsManager::KeyDownEvent ev);
 	void handle_event(EventsManager::KeyUpEvent ev);
 	void handle_event(EventsManager::KeyLeftEvent ev);
 	void handle_event(EventsManager::KeyRightEvent ev);
 	void handle_event(EventsManager::KeySpaceEvent ev);
 	void handle_event(EventsManager::KeyAEvent ev);
-	void handle_event(EventsManager::KeyDEvent ev);
+	void handle_event(EventsManager::KeyDEvent ev);*/
 
 	void load_picture(std::vector<Triangle> model);
 
@@ -55,7 +57,7 @@ private:
 	bool _isActive = false;
 
 	std::unique_ptr<Window> _window;
-	std::unique_ptr<EventsManager> _eventsManager;
+	std::shared_ptr<EventsManager> _eventsManager;
 	std::unique_ptr<Renderer> _renderer;
 
 	std::shared_ptr<Node> _scene;

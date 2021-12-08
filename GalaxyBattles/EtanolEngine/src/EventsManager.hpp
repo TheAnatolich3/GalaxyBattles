@@ -5,25 +5,51 @@
 
 class EventsManager {
 public:
-	struct QuitEvent {};
-	struct KeyDownEvent {};
-	struct KeyUpEvent {};
-	struct KeyLeftEvent {};
-	struct KeyRightEvent {};
-	struct KeySpaceEvent {};
-	struct KeyAEvent {};
-	struct KeyDEvent {};
+
+	enum class KeyCode
+	{
+		Up,
+		Down,
+		Left,
+		Right,
+		A,
+		D,
+		Unknown
+	};
+
+	enum class KeyType
+	{
+		KeyDown,
+		KeyUp
+	};
+
+	struct KeyEvent
+	{
+		KeyCode key;
+		KeyType type;
+	};
+
+	struct QuitEvent { };
+	/*struct KeyDownEvent { bool f; };
+	struct KeyUpEvent { bool f; };
+	struct KeyLeftEvent { bool f; };
+	struct KeyRightEvent { bool f; };
+	struct KeySpaceEvent { bool f; };
+	struct KeyAEvent { bool f; };
+	struct KeyDEvent { bool f; };*/
 
 	struct Delegate
 	{
+		//virtual void handle_event(KeyboardEvent) = 0;
 		virtual void handle_event(QuitEvent) = 0;
-		virtual void handle_event(KeyDownEvent) = 0;
+		virtual void handle_event(KeyEvent) = 0;
+		/*virtual void handle_event(KeyDownEvent) = 0;
 		virtual void handle_event(KeyUpEvent) = 0;
 		virtual void handle_event(KeyLeftEvent) = 0;
 		virtual void handle_event(KeyRightEvent) = 0;
 		virtual void handle_event(KeySpaceEvent) = 0;
 		virtual void handle_event(KeyAEvent) = 0;
-		virtual void handle_event(KeyDEvent) = 0;
+		virtual void handle_event(KeyDEvent) = 0;*/
 	};
 
 	template<typename T>

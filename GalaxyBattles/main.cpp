@@ -6,6 +6,8 @@
 #include <tiny_obj_loader.cc>
 #include <vector>
 #include <chrono>
+#include <EventsManager.hpp>
+#include <Tank.hpp>
 
 using namespace std;
 
@@ -62,7 +64,9 @@ std::vector<Engine::Triangle> get_triangle_list(std::string_view file_name) {
 
 int main(int argc, char* argv[])
 {
- 	Engine engine{};
+	std::shared_ptr<EventsManager> ea = std::make_shared<EventsManager>();
+	Engine engine{ ea };
+	
 	string mode = "OpenGL";
 	if (argc > 1)
 	{
@@ -70,28 +74,14 @@ int main(int argc, char* argv[])
 	}
 
 	engine.init("GalaxyBattles", SCREEN_WIDTH, SCREEN_HEIGHT, mode);
-
-	auto tank_body = std::make_shared<Sprite>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/tank_body_removed_back.png");
-	auto tank_head = std::make_shared<Sprite>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/tank_head_removed_back.png");
-	tank_body->setPosition(glm::vec2(engine.get_window_width() * 0.2f,
-									 engine.get_window_height()* 0.5f));
-	tank_head->setScale(glm::vec2(0.6f, 0.6f));
-
-	glm::vec2 tank_body_size = tank_body->getSize();
-	glm::vec2 tank_head_size = tank_head->getSize();
-	glm::vec2 tank_head_scale = tank_head->getScale();
-
-	tank_head->setPosition(glm::vec2(tank_body_size.x * 0.6 - (tank_head_size.x * 0.5 * tank_head_scale.x),
-		tank_body_size.y / 2 - (tank_head_size.y * 0.5 * tank_head_scale.y)));
-
-	tank_head->setAnchor(glm::vec2(tank_head_size.x*0.23, tank_head_size.y*0.29));
+	std::shared_ptr<Tank> tank = std::make_shared<Tank>(engine);
+	ea->add_delegate(tank.get());
+	engine.scene()->addNode(tank);
 	
-
-	engine.scene()->addNode(tank_body);
-	tank_body->addNode(tank_head);
 	//engine.load_picture(get_triangle_list("../../../../GalaxyBattles/EtanolEngine/resource/african_head.obj"));
 	while (engine.isActive()) {
 		engine.update();
 	}
+
 	return 0;
 }

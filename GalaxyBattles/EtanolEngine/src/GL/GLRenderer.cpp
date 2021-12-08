@@ -1,10 +1,8 @@
-#include <fstream>
 #include <string>
 #include <iostream>
 #include <Bitmap.hpp>
 #include <GL/GLVertexBuffer.hpp>
 #include <GL/GLDrawProgram.hpp>
-#include "Sprite.hpp"
 #include "GLRenderer.hpp"
 
 void check_errors(std::string_view file, int line)

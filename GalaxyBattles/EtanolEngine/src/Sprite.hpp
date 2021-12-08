@@ -20,11 +20,7 @@ public:
 
 protected:
 	void visitSelf() override;
-	/*void transform(float angle, float scale, float x_offset, float y_offset);
-	void add_element(Engine::Triangle tr);
 
-	const Engine::Triangle* get_data() const;
-	size_t get_size() const;*/
 private:
 	const Engine& _engine;
 	std::shared_ptr<ShaderProgram> _program;

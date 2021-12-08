@@ -6,7 +6,6 @@
 #include <string_view>
 #include <Bitmap.hpp>
 
-class Engine;
 class SDLRenderer final : public Renderer
 {
 public:

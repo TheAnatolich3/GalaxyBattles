@@ -1,7 +1,3 @@
-#pragma once
-#define GLEW_STATIC
-
-#include <GL/glew.h>
 #include <Engine.hpp>
 #include <EventsManager.hpp>
 #include <SDL/SDLRenderer.hpp>
@@ -58,33 +54,39 @@ void SDLWindow::update()
     {
          event_manager.invoke_event(EventsManager::QuitEvent{});
     }
-    else if (e.type == SDL_KEYDOWN)
+    else if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP)
     {
+        EventsManager::KeyType type = EventsManager::KeyType::KeyUp;
+        if (e.type == SDL_KEYDOWN)
+            type = EventsManager::KeyType::KeyDown;
+        EventsManager::KeyCode code = EventsManager::KeyCode::Unknown;
+
         switch (e.key.keysym.sym)
         {
-        case SDLK_DOWN: 
-            event_manager.invoke_event(EventsManager::KeyDownEvent{});
-            break;
         case SDLK_UP:
-            event_manager.invoke_event(EventsManager::KeyUpEvent{});
+            code = EventsManager::KeyCode::Up;
+            break;
+        case SDLK_DOWN:
+            code = EventsManager::KeyCode::Down;
             break;
         case SDLK_LEFT:
-            event_manager.invoke_event(EventsManager::KeyLeftEvent{});
+            code = EventsManager::KeyCode::Left;
             break;
         case SDLK_RIGHT:
-            event_manager.invoke_event(EventsManager::KeyRightEvent{});
+            code = EventsManager::KeyCode::Right;
             break;
-        case SDLK_SPACE:
-            event_manager.invoke_event(EventsManager::KeySpaceEvent{});
-            break;
+            //case SDLK_SPACE:
+            //    event_manager.invoke_event(EventManager::KeySpaceEvent{});
+            //    break;
         case SDLK_a:
-            event_manager.invoke_event(EventsManager::KeyAEvent{});
+            code = EventsManager::KeyCode::A;
             break;
         case SDLK_d:
-            event_manager.invoke_event(EventsManager::KeyDEvent{});
+            code = EventsManager::KeyCode::D;
             break;
         default: break;
         }
+        event_manager.invoke_event(EventsManager::KeyEvent{ code, type });
     }
 }
 
