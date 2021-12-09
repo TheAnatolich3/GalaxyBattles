@@ -8,6 +8,7 @@
 #include <chrono>
 #include <EventsManager.hpp>
 #include <Tank.hpp>
+#include <Sound.hpp>
 
 using namespace std;
 
@@ -78,9 +79,20 @@ int main(int argc, char* argv[])
 	ea->add_delegate(tank.get());
 	engine.scene()->addNode(tank);
 	
+	auto sound = std::make_shared<Sound>("../../../../GalaxyBattles/EtanolEngine/resource/back_short_ev.wav", false, false);
+	int counter = 0;
 	//engine.load_picture(get_triangle_list("../../../../GalaxyBattles/EtanolEngine/resource/african_head.obj"));
 	while (engine.isActive()) {
 		engine.update();
+		counter++;
+		if (counter < 1000)
+		{
+			sound->play();
+		}
+		else {
+			sound->pause();
+		}
+
 	}
 
 	return 0;

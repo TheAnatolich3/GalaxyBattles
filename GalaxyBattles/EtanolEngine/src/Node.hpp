@@ -44,7 +44,7 @@ protected:
 
 	glm::vec2 _position = glm::vec2(0.0f);
 	glm::vec2 _scale = glm::vec2(1.0f);
-	glm::vec2 _anchor = glm::vec2(0.0f);
+	glm::vec2 _anchor = glm::vec2(0.5f);
 	glm::float32 _rotation = 0.0f;
 	glm::vec2 _contentSize = glm::vec2(0.0f);
 	std::optional<glm::mat3> _transform;

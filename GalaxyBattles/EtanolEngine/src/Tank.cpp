@@ -7,8 +7,9 @@ Tank::Tank(const Engine& engine)
 {
 	_body = std::make_shared<Sprite>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/tank_body_removed_back.png");
 	_head = std::make_shared<Sprite>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/tank_head_removed_back.png");
-	_body->setPosition(glm::vec2(engine.get_window_width() * 0.2f,
+    this->setPosition(glm::vec2(engine.get_window_width() * 0.2f,
 		engine.get_window_height() * 0.5f));
+    this->setAnchor(glm::vec2(0.5f));
 	_head->setScale(glm::vec2(0.6f, 0.6f));
 
 	glm::vec2 tank_body_size = _body->getSize();
@@ -25,49 +26,6 @@ void Tank::handle_event(EventsManager::QuitEvent)
 
 }
 
-//void Tank::handle_event(EventsManager::KeyDownEvent ev)
-//{
-//	_isDown = ev.f;
-//	std::cout << "Down!" << std::endl;
-//}
-//
-//void Tank::handle_event(EventsManager::KeyUpEvent ev)
-//{
-//	_isUp = ev.f;
-//	std::cout << "Up!" << std::endl;
-//}
-//
-//void Tank::handle_event(EventsManager::KeyLeftEvent ev)
-//{
-//	_isLeft = ev.f;
-//	std::cout << "Left!" << std::endl;
-//}
-//
-//void Tank::handle_event(EventsManager::KeyRightEvent ev)
-//{
-//	_isRight = ev.f;
-//	std::cout << "Right!" << std::endl;
-//}
-//
-//void Tank::handle_event(EventsManager::KeySpaceEvent ev)
-//{
-//	_isSpace = ev.f;
-//	std::cout << "BOOM!" << std::endl;
-//}
-//
-//void Tank::handle_event(EventsManager::KeyAEvent ev)
-//{
-//	_isA = ev.f;
-//	std::cout << "AAAAAA!" << std::endl;
-//	//_head->setRotation(_head->getRotation() - 5);
-//}
-//
-//void Tank::handle_event(EventsManager::KeyDEvent ev)
-//{
-//	_isD = ev.f;
-//	std::cout << "DDDDDD!" << std::endl;
-//	//_head->setRotation(_head->getRotation() + 5);
-//}
 
 void Tank::handle_event(EventsManager::KeyEvent ev)
 {
@@ -174,7 +132,7 @@ void Tank::visitSelf()
         }
     }
 
-    auto vector = glm::rotate(glm::vec2{ 0.0f, -1.0f }, glm::radians(getRotation()));
+    auto vector = glm::rotate(glm::vec2{ 1.0f, 0.0f }, glm::radians(getRotation()));
 
     if (_speed > 0.1f)
     {
@@ -200,5 +158,5 @@ void Tank::visitSelf()
         }
     }
 
-    _body->setRotation(_rotation);
+    setRotation(_rotation);
 }
