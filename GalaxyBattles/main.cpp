@@ -7,6 +7,7 @@
 #include <chrono>
 #include <EventsManager.hpp>
 #include <Sound.hpp>
+#include <iostream>
 #include "Game/Tank.hpp"
 
 using namespace std;
@@ -64,8 +65,9 @@ std::vector<Engine::Triangle> get_triangle_list(std::string_view file_name) {
 
 int main(int argc, char* argv[])
 {
-	std::shared_ptr<EventsManager> ea = std::make_shared<EventsManager>();
-	Engine engine{ ea };
+	std::shared_ptr<EventsManager> em = std::make_shared<EventsManager>();
+	std::shared_ptr<AudioManager> am = std::make_shared<AudioManager>();
+	Engine engine{ em, am};
 	
 	string mode = "OpenGL";
 	if (argc > 1)
@@ -74,24 +76,16 @@ int main(int argc, char* argv[])
 	}
 
 	engine.init("GalaxyBattles", SCREEN_WIDTH, SCREEN_HEIGHT, mode);
-	std::shared_ptr<Tank> tank = std::make_shared<Tank>(engine);
-	ea->add_delegate(tank.get());
+	std::shared_ptr<Tank> tank = std::make_shared<Tank>(engine, am);
+	em->add_delegate(tank.get());
 	engine.scene()->addNode(tank);
 	
-	auto sound = std::make_shared<Sound>("../../../../GalaxyBattles/EtanolEngine/resource/back_short_ev.wav", false, false);
-	int counter = 0;
-	//engine.load_picture(get_triangle_list("../../../../GalaxyBattles/EtanolEngine/resource/african_head.obj"));
+	std::shared_ptr<Sound> _music_back = am->createSound("../../../../GalaxyBattles/EtanolEngine/resource/back_short_ev.wav", true, 10);
+	//std::shared_ptr<Sound> _tank_shot = am->createSound("../../../../GalaxyBattles/EtanolEngine/resource/shot_ev.wav", true, 100);
+	_music_back->play();
+	//_tank_shot->play();
 	while (engine.isActive()) {
 		engine.update();
-		counter++;
-		if (counter < 1000)
-		{
-			sound->play();
-		}
-		else {
-			sound->pause();
-		}
-
 	}
 
 	return 0;

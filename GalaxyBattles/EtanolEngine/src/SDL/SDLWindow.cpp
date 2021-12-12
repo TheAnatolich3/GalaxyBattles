@@ -75,9 +75,9 @@ void SDLWindow::update()
         case SDLK_RIGHT:
             code = EventsManager::KeyCode::Right;
             break;
-            //case SDLK_SPACE:
-            //    event_manager.invoke_event(EventManager::KeySpaceEvent{});
-            //    break;
+        case SDLK_SPACE:
+            code = EventsManager::KeyCode::Space;
+            break;
         case SDLK_a:
             code = EventsManager::KeyCode::A;
             break;

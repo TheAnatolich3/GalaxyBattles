@@ -5,7 +5,8 @@
 #include <memory>
 #include "Engine.hpp"
 
-Engine::Engine(std::shared_ptr<EventsManager> ea) {
+Engine::Engine(std::shared_ptr<EventsManager> ea, std::shared_ptr<AudioManager> am) {
+	_audioManager = am;
 	_eventsManager = ea;
 	_eventsManager->add_delegate(this);
 }
@@ -36,6 +37,7 @@ void Engine::update() {
 	_scene->visit();
 	_renderer->draw();
 	_window->swap();
+	_audioManager->update();
 }
 
 
@@ -83,3 +85,9 @@ std::shared_ptr<Node> Engine::scene()
 {
 	return _scene;
 }
+
+const AudioManager& Engine::audioManager() const
+{
+	return *_audioManager;
+}
+

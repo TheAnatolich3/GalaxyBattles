@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 3.8)
 set(CMAKE_CXX_STANDARD 17)
 
 # Добавьте источник в исполняемый файл этого проекта.
-add_executable (GalaxyBattles "main.cpp" "Game/Tank.hpp" "Game/Tank.cpp" "Game/Sprite.cpp" "Game/Sprite.hpp")
+add_executable (GalaxyBattles "main.cpp" "Game/Tank.hpp" "Game/Tank.cpp")
 
 set_target_properties(GalaxyBattles PROPERTIES
     CXX_STANDARD 17

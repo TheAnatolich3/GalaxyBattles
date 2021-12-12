@@ -14,6 +14,7 @@ public:
 		Right,
 		A,
 		D,
+		Space,
 		Unknown
 	};
 

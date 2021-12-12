@@ -6,6 +6,7 @@
 #include <iostream>
 #include <EventsManager.hpp>
 #include <memory>
+#include <AudioManager.hpp>
 
 class Window;
 class Renderer;
@@ -23,7 +24,7 @@ public:
 		Vertex v1, v2, v3;
 	};
 
-	explicit Engine(std::shared_ptr<EventsManager> ea);
+	explicit Engine(std::shared_ptr<EventsManager> ea, std::shared_ptr<AudioManager> am);
 	~Engine();
 
 	void init(std::string_view name_window, size_t width, size_t height, std::string mode_input);
@@ -42,6 +43,7 @@ public:
 	[[nodiscard]] const EventsManager& eventsManager() const;
 	[[nodiscard]] const Renderer& renderer() const;
 	[[nodiscard]] const Window& window() const;
+	[[nodiscard]] const AudioManager& audioManager() const;
 
 	std::shared_ptr<Node> scene();
 private:
@@ -50,8 +52,9 @@ private:
 
 	std::unique_ptr<Window> _window;
 	std::shared_ptr<EventsManager> _eventsManager;
+	std::shared_ptr<AudioManager> _audioManager;
 	std::unique_ptr<Renderer> _renderer;
-
+	
 	std::shared_ptr<Node> _scene;
 };
 

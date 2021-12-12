@@ -2,8 +2,9 @@
 #include "Tank.hpp"
 
 
-Tank::Tank(const Engine& engine)
+Tank::Tank(const Engine& engine, std::shared_ptr<AudioManager> am)
 {
+    _audioManager = am;
 	_body = std::make_shared<Sprite>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/tank_body_removed_back.png");
 	_head = std::make_shared<Sprite>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/tank_head_removed_back.png");
     this->setPosition(glm::vec2(engine.get_window_width() * 0.2f,
@@ -56,6 +57,13 @@ void Tank::handle_event(EventsManager::KeyEvent ev)
     if (ev.key == EventsManager::KeyCode::D)
     {
         _isD = (ev.type == EventsManager::KeyType::KeyDown);
+    }
+
+    if (ev.key == EventsManager::KeyCode::Space && ev.type == EventsManager::KeyType::KeyDown)
+    {
+        std::shared_ptr<Sound> shot = _audioManager->createSound("../../../../GalaxyBattles/EtanolEngine/resource/shot_ev.wav", false, 100);
+        shot->play();
+        _shots.push_back(shot);
     }
 }
 
