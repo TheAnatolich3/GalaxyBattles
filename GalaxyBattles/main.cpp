@@ -2,13 +2,12 @@
 //
 #pragma once
 #include <Engine.hpp>
-#include <Sprite.hpp>
 #include <tiny_obj_loader.cc>
 #include <vector>
 #include <chrono>
 #include <EventsManager.hpp>
-#include <Tank.hpp>
 #include <Sound.hpp>
+#include "Game/Tank.hpp"
 
 using namespace std;
 

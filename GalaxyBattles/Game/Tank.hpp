@@ -1,6 +1,7 @@
 #include <memory>
 #include <EventsManager.hpp>
-#include <Sprite.hpp>
+#include <chrono>
+#include "Sprite.hpp"
 
 class Tank : public EventsManager::Delegate, public Node
 {

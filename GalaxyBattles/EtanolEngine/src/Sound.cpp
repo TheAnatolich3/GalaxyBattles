@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <vector>
+#include <string>
 #include "Sound.hpp"
 
 namespace
@@ -47,11 +48,15 @@ namespace
 }
 
 
-Sound::Sound(std::string_view filename, bool is_stream, bool is_loop):
-	_isStream(is_stream), _isLoop(is_loop)
+Sound::Sound(std::string_view filename, bool is_loop):
+	_isLoop(is_loop)
 {
-	//"../../../../GalaxyBattles/EtanolEngine/resource/back_long_ev.wav"
 	SDL_RWops* file = SDL_RWFromFile(filename.data(), "rb");
+
+	if (file == nullptr)
+	{
+		throw std::runtime_error("Opening file error: " + std::string{filename});
+	}
 
 	uint8_t* sample_buffer_from_file = nullptr;
 	uint32_t sample_buffer_len_from_file = 0;

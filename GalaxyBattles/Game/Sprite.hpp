@@ -1,7 +1,7 @@
 #ifndef SPRITE_HPP
 #define SPRITE_HPP
 
-#include <Node.hpp>
+#include "Node.hpp"
 #include <vector>
 #include <Engine.hpp>
 
