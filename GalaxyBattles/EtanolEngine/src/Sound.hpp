@@ -7,7 +7,8 @@
 class Sound
 {
 public:
-	Sound(std::string_view filename, bool is_loop, int volume);
+	explicit Sound(std::string_view filename, bool is_loop, int volume);
+	~Sound();
 
 	void play();
 	void pause();
@@ -19,7 +20,6 @@ private:
 	enum class State {
 		ST_PLAY,
 		ST_PAUSE,
-		ST_END,
 		ST_STOP
 	};
 
@@ -27,7 +27,8 @@ private:
 	bool _isLoop = false;
 	size_t _len_file = 0;
 	size_t _pos = 0;
-	std::shared_ptr<uint8_t*> _data = std::make_shared<uint8_t*>();
+	uint8_t* _data = nullptr;
+
 	int _volume = 0;
 
 	SDL_AudioSpec _audio_spec_from_file{};

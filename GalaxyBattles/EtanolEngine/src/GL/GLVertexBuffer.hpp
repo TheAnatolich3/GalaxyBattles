@@ -12,8 +12,7 @@ public:
 
     virtual ~GLVertexBuffer();
 
-    void draw();
-
+    void draw(int count, int pos);
 private:
     uint32_t _VAO = 0;
     uint32_t _VBO = 0;

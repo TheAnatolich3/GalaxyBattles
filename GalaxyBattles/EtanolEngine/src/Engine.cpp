@@ -35,7 +35,7 @@ void Engine::init(std::string_view name_window, size_t width, size_t height, std
 void Engine::update() {
 	_window->update();
 	_scene->visit();
-	_renderer->draw();
+	_renderer->draw(6, 0);
 	_window->swap();
 	_audioManager->update();
 }

@@ -50,7 +50,7 @@ GLRenderer::GLRenderer(const Engine& engine, SDL_Window* window)
 	glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void GLRenderer::draw()
+void GLRenderer::draw(int count, int pos)
 {
 	glDisable(GL_CULL_FACE);
     glClearColor(0.0, 1.0, 1.0, 0.0);
@@ -66,7 +66,7 @@ void GLRenderer::draw()
 			if (glProgram)
 			{
 				glProgram->activate();
-				glVertexBuffer->draw();
+				glVertexBuffer->draw(count, pos);
 			}
 		}
 	}

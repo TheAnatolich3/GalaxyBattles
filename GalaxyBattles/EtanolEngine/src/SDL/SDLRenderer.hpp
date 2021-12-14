@@ -19,7 +19,7 @@ public:
     std::shared_ptr<ShaderProgram> createProgram(std::string_view name) const override;
     std::shared_ptr<Texture> createTexture(Bitmap bitmap) const override;
 
-    void draw() override;
+    void draw(int count, int pos) override;
 private:
     std::shared_ptr<SDL_Window> _sdlWindow;
     std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> _sdlRenderer;

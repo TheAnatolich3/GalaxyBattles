@@ -9,7 +9,7 @@ SDLRenderer::SDLRenderer(const Engine& engine, std::shared_ptr<SDL_Window> sdlWi
 {
 }
 
-void SDLRenderer::draw()
+void SDLRenderer::draw(int count, int pos)
 {
 	int screen_width = static_cast<int>(_engine.get_window_width());
 	int screen_height = static_cast<int>(_engine.get_window_height());

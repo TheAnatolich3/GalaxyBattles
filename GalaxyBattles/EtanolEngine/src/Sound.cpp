@@ -4,6 +4,11 @@
 #include "Sound.hpp"
 
 
+Sound::~Sound()
+{
+	SDL_FreeWAV(_data);
+}
+
 Sound::Sound(std::string_view filename, bool is_loop, int volume):
 	_isLoop(is_loop), _volume(volume)
 {
@@ -21,7 +26,7 @@ Sound::Sound(std::string_view filename, bool is_loop, int volume):
 		file,
 		auto_delete_file,
 		&_audio_spec_from_file, 
-		_data.get(),
+		&_data,
 		&file_size);
 
 	_len_file = file_size;

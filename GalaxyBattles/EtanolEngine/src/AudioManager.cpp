@@ -9,52 +9,57 @@ void AudioManager::audio_callback(void* userdata, uint8_t* stream, int len)
 	SDL_memset(stream, 0, len);
 	for (auto& buffer : audioManager->_buffers)
 	{
-		auto amount = buffer.lock()->_len_file - buffer.lock()->_pos;
-		if (amount > len)
+		auto sound = buffer.lock();
+		if (sound->is_playing())
 		{
-			amount = len;
-		}
-
-		SDL_MixAudioFormat(stream,
-			*(buffer.lock()->_data) + buffer.lock()->_pos,
-			AUDIO_S16LSB,
-			amount,
-			buffer.lock()->_volume);
-
-		buffer.lock()->_pos += amount;
-
-		if (buffer.lock()->_pos >= buffer.lock()->_len_file)
-		{
-			if (buffer.lock()->_isLoop)
+			auto amount = sound->_len_file - sound->_pos;
+			if (amount > len)
 			{
-				buffer.lock()->_pos = 0;
+				amount = len;
 			}
-			else
+
+			SDL_MixAudioFormat(stream,
+				sound->_data + sound->_pos,
+				AUDIO_S16LSB,
+				amount,
+				sound ->_volume);
+
+			sound->_pos += amount;
+
+			if (sound->_pos >= sound->_len_file)
 			{
-				buffer.lock()->_state = Sound::State::ST_END;
+				if (sound->_isLoop)
+				{
+					sound->_pos = 0;
+				}
+				else
+				{
+					sound->stop();
+				}
 			}
 		}
 	}
 }
 
-std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, bool is_loop, int volume)
+AudioManager::AudioManager()
 {
-	std::shared_ptr<Sound> sound = std::make_shared<Sound>(file_name, is_loop, volume);
-	_audio_spec_from_file = sound->get_AudioFormat();
-	_audio_spec_from_file.callback = this->audio_callback;
-	_audio_spec_from_file.userdata = this;
-	_audio_spec_from_file.channels = 2;
+	SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_memset(&_wanted_spec, 0, sizeof(_wanted_spec));
+	_wanted_spec.freq = 44100;
+	_wanted_spec.format = AUDIO_S16LSB;
+	_wanted_spec.channels = 2;
+	_wanted_spec.samples = 4096;
+	_wanted_spec.callback = this->audio_callback;
+	_wanted_spec.userdata = this;
 
 	SDL_AudioSpec returned{};
 	const int32_t allow_changes = 0;
 	const char* device_name = nullptr;
-	int i, count = SDL_GetNumAudioDevices(0);
-
 
 	_audio_device = SDL_OpenAudioDevice(
 		device_name,
 		0,
-		&_audio_spec_from_file,
+		&_wanted_spec,
 		&returned,
 		allow_changes);
 
@@ -63,13 +68,19 @@ std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, boo
 		throw std::runtime_error("Can't open Audio Device");
 	}
 
-	if (_audio_spec_from_file.format != returned.format
-		|| _audio_spec_from_file.channels != returned.channels
-		|| _audio_spec_from_file.freq != returned.freq)
+	if (_wanted_spec.format != returned.format
+		|| _wanted_spec.channels != returned.channels
+		|| _wanted_spec.freq != returned.freq)
 	{
 		throw std::runtime_error("Audio Device doesn't support our format");
 	}
+}
 
+
+
+std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, bool is_loop, int volume)
+{
+	std::shared_ptr<Sound> sound = std::make_shared<Sound>(file_name, is_loop, volume);
 	_buffers.push_back(sound);
 	return sound;
 }
@@ -78,7 +89,7 @@ std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, boo
 void AudioManager::update()
 {
 	_buffers.erase(std::remove_if(_buffers.begin(), _buffers.end(), [](const std::weak_ptr<Sound>& s) {
-		return s.lock()->get_state() == Sound::State::ST_END; }), _buffers.end());
+		return s.expired(); }), _buffers.end());
 
 	if (_buffers.size() != 0)
 	{

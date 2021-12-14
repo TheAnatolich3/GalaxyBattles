@@ -19,6 +19,8 @@ Tank::Tank(const Engine& engine, std::shared_ptr<AudioManager> am)
 	_head->setAnchor(glm::vec2(0.368f, 0.5f));
 	_body->addNode(_head);
 	this->addNode(_body);
+
+    _shot = _audioManager->createSound("../../../../GalaxyBattles/EtanolEngine/resource/shot_ev.wav", false, 100);
 }
 
 void Tank::handle_event(EventsManager::QuitEvent)
@@ -26,6 +28,10 @@ void Tank::handle_event(EventsManager::QuitEvent)
 
 }
 
+Tank::~Tank()
+{
+    _shot->stop();
+}
 
 void Tank::handle_event(EventsManager::KeyEvent ev)
 {
@@ -61,10 +67,9 @@ void Tank::handle_event(EventsManager::KeyEvent ev)
 
     if (ev.key == EventsManager::KeyCode::Space && ev.type == EventsManager::KeyType::KeyDown)
     {
-        std::shared_ptr<Sound> shot = _audioManager->createSound("../../../../GalaxyBattles/EtanolEngine/resource/shot_ev.wav", false, 100);
-        shot->play();
-        _shots.push_back(shot);
-    }
+        _shot->stop();
+        _shot->play();
+    } 
 }
 
 void Tank::visitSelf()

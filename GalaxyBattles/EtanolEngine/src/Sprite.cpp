@@ -18,6 +18,7 @@ Sprite::Sprite(const Engine& engine, std::string_view filepath) : _engine(engine
     data.vertices.emplace_back();
     data.vertices.back().position = { 0.0, 0.0 };
     data.vertices.back().texcoord = { 0.0, 0.0 };
+   // data.vertices.back().color = glm::vec4{ 0.0, 0.0 , 1.0, 1.0};
 
     data.vertices.emplace_back();
     data.vertices.back().position = { 0.0, bitmap.getSize().y};

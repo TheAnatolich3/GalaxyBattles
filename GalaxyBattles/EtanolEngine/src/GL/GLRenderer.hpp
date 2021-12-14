@@ -8,7 +8,7 @@ class GLRenderer : public Renderer
 {
 public:
 	GLRenderer(const Engine& engine, SDL_Window* window);
-	void draw() override;
+	void draw(int count, int pos) override;
 	std::shared_ptr<VertexBuffer> createVertexBuffer(MeshData data) const override;
 	std::shared_ptr<ShaderProgram> createProgram(std::string_view name) const override;
 	std::shared_ptr<Texture> createTexture(Bitmap bitmap) const override;
