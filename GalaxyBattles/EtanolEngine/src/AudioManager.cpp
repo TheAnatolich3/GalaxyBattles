@@ -78,7 +78,7 @@ AudioManager::AudioManager()
 
 
 
-std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, bool is_loop, int volume)
+std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, bool is_loop, int volume) const
 {
 	std::shared_ptr<Sound> sound = std::make_shared<Sound>(file_name, is_loop, volume);
 	_buffers.push_back(sound);

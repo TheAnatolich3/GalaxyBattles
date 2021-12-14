@@ -66,8 +66,7 @@ std::vector<Engine::Triangle> get_triangle_list(std::string_view file_name) {
 int main(int argc, char* argv[])
 {
 	std::shared_ptr<EventsManager> em = std::make_shared<EventsManager>();
-	std::shared_ptr<AudioManager> am = std::make_shared<AudioManager>();
-	Engine engine{ em, am};
+	Engine engine {em};
 	
 	string mode = "OpenGL";
 	if (argc > 1)
@@ -76,14 +75,13 @@ int main(int argc, char* argv[])
 	}
 
 	engine.init("GalaxyBattles", SCREEN_WIDTH, SCREEN_HEIGHT, mode);
-	std::shared_ptr<Tank> tank = std::make_shared<Tank>(engine, am);
+	std::shared_ptr<Tank> tank = std::make_shared<Tank>(engine);
 	em->add_delegate(tank.get());
 	engine.scene()->addNode(tank);
 	
-	std::shared_ptr<Sound> _music_back = am->createSound("../../../../GalaxyBattles/EtanolEngine/resource/back_short_ev.wav", true, 10);
-	//std::shared_ptr<Sound> _tank_shot = am->createSound("../../../../GalaxyBattles/EtanolEngine/resource/shot_ev.wav", true, 100);
+	std::shared_ptr<Sound> _music_back = engine.audioManager().createSound("../../../../GalaxyBattles/EtanolEngine/resource/back_short_ev.wav", true, 10);
 	_music_back->play();
-	//_tank_shot->play();
+
 	while (engine.isActive()) {
 		engine.update();
 	}

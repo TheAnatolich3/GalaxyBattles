@@ -5,8 +5,7 @@
 #include <memory>
 #include "Engine.hpp"
 
-Engine::Engine(std::shared_ptr<EventsManager> ea, std::shared_ptr<AudioManager> am) {
-	_audioManager = am;
+Engine::Engine(std::shared_ptr<EventsManager> ea) {
 	_eventsManager = ea;
 	_eventsManager->add_delegate(this);
 }
@@ -30,6 +29,7 @@ void Engine::init(std::string_view name_window, size_t width, size_t height, std
 	_window = std::make_unique<SDLWindow>(*this, name_window.data(), width, height, mode);
 	_renderer = _window->createRenderer();
 	_scene = std::make_shared<Node>();
+	_audioManager = std::make_unique<AudioManager>();
 }
 
 void Engine::update() {
@@ -90,4 +90,5 @@ const AudioManager& Engine::audioManager() const
 {
 	return *_audioManager;
 }
+
 

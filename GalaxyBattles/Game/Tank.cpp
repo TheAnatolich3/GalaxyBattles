@@ -2,9 +2,8 @@
 #include "Tank.hpp"
 
 
-Tank::Tank(const Engine& engine, std::shared_ptr<AudioManager> am)
+Tank::Tank(const Engine& engine)
 {
-    _audioManager = am;
 	_body = std::make_shared<Sprite>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/tank_body_removed_back.png");
 	_head = std::make_shared<Sprite>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/tank_head_removed_back.png");
     this->setPosition(glm::vec2(engine.get_window_width() * 0.2f,
@@ -20,7 +19,7 @@ Tank::Tank(const Engine& engine, std::shared_ptr<AudioManager> am)
 	_body->addNode(_head);
 	this->addNode(_body);
 
-    _shot = _audioManager->createSound("../../../../GalaxyBattles/EtanolEngine/resource/shot_ev.wav", false, 100);
+    _shot = engine.audioManager().createSound("../../../../GalaxyBattles/EtanolEngine/resource/shot_ev.wav", false, 100);
 }
 
 void Tank::handle_event(EventsManager::QuitEvent)

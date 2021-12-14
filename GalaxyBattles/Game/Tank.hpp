@@ -6,7 +6,7 @@
 class Tank : public EventsManager::Delegate, public Node
 {
 public:
-	explicit Tank(const Engine& engine, std::shared_ptr<AudioManager> am); 
+	explicit Tank(const Engine& engine); 
 	~Tank();
 
 	void handle_event(EventsManager::QuitEvent) override;
@@ -27,6 +27,5 @@ private:
 	float _speed = 0;
 	float _rotation = 0;
 	std::chrono::steady_clock::time_point _prevTime;
-	std::shared_ptr<AudioManager> _audioManager;
 	std::shared_ptr<Sound> _shot;
 };

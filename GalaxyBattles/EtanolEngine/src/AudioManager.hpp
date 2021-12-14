@@ -8,12 +8,12 @@ class AudioManager
 {
 public:
 	AudioManager();
-	std::shared_ptr<Sound> createSound(std::string_view file_name, bool is_loop, int volume);
+	std::shared_ptr<Sound> createSound(std::string_view file_name, bool is_loop, int volume) const;
 	void update();
 private:
 	static void audio_callback(void* userdata, uint8_t* stream, int len);
 	SDL_AudioDeviceID _audio_device;
 	bool pause_status = true;
 	SDL_AudioSpec _wanted_spec{};
-	std::vector<std::weak_ptr<Sound>> _buffers;
+	mutable std::vector<std::weak_ptr<Sound>> _buffers;
 };
