@@ -9,32 +9,35 @@ void AudioManager::audio_callback(void* userdata, uint8_t* stream, int len)
 	SDL_memset(stream, 0, len);
 	for (auto& buffer : audioManager->_buffers)
 	{
-		auto sound = buffer.lock();
-		if (sound->is_playing())
+		if (!buffer.expired())
 		{
-			auto amount = sound->_len_file - sound->_pos;
-			if (amount > len)
+			auto sound = buffer.lock();
+			if (sound->is_playing())
 			{
-				amount = len;
-			}
-
-			SDL_MixAudioFormat(stream,
-				sound->_data + sound->_pos,
-				AUDIO_S16LSB,
-				amount,
-				sound ->_volume);
-
-			sound->_pos += amount;
-
-			if (sound->_pos >= sound->_len_file)
-			{
-				if (sound->_isLoop)
+				auto amount = sound->_len_file - sound->_pos;
+				if (amount > len)
 				{
-					sound->_pos = 0;
+					amount = len;
 				}
-				else
+
+				SDL_MixAudioFormat(stream,
+					sound->_data + sound->_pos,
+					AUDIO_S16LSB,
+					amount,
+					sound->_volume);
+
+				sound->_pos += amount;
+
+				if (sound->_pos >= sound->_len_file)
 				{
-					sound->stop();
+					if (sound->_isLoop)
+					{
+						sound->_pos = 0;
+					}
+					else
+					{
+						sound->stop();
+					}
 				}
 			}
 		}

@@ -3,6 +3,7 @@
 #include <Bitmap.hpp>
 #include <GL/GLVertexBuffer.hpp>
 #include <GL/GLDrawProgram.hpp>
+#include <GL/GLTexture.hpp>
 #include "GLRenderer.hpp"
 
 void check_errors(std::string_view file, int line)
@@ -52,9 +53,11 @@ GLRenderer::GLRenderer(const Engine& engine, SDL_Window* window)
 
 void GLRenderer::draw(int count, int pos)
 {
+	glDisable(GL_SCISSOR_TEST);
 	glDisable(GL_CULL_FACE);
     glClearColor(0.0, 1.0, 1.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_SCISSOR_TEST);
 
 	for (const auto& command : _commands)
 	{
@@ -66,7 +69,23 @@ void GLRenderer::draw(int count, int pos)
 			if (glProgram)
 			{
 				glProgram->activate();
-				glVertexBuffer->draw(count, pos);
+				if (command._scissor)
+				{
+					glScissor(command._scissor->r, command._scissor->g, command._scissor->b, command._scissor->a);
+				}
+				else
+				{
+					glScissor(0, 0, _engine.get_window_width(), _engine.get_window_height());
+				}
+
+				if (command._ren)
+				{
+					glVertexBuffer->draw(command._ren->_count, command._ren->_offset);
+				}
+				else
+				{
+					glVertexBuffer->draw(6, 0);
+				}
 			}
 		}
 	}

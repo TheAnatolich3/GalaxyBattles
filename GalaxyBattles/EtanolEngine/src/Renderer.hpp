@@ -5,6 +5,8 @@
 #include <Engine.hpp>
 #include <MeshData.hpp>
 #include <Bitmap.hpp>
+#include <optional>
+#include <glm/glm.hpp>
 
 class VertexBuffer;
 class ShaderProgram;
@@ -15,10 +17,19 @@ class Renderer
 public:
     virtual ~Renderer() = default;
 
+    struct sub_params
+    {
+        int _count = 0;
+        int _offset = 0;
+    };
+
+
     struct Command
     {
         std::shared_ptr<VertexBuffer>  vertexBuffer;
         std::shared_ptr<ShaderProgram> program;
+        std::optional<sub_params> _ren;
+        std::optional<glm::vec4> _scissor;
     };
 
     void addCommand(Command command) const
@@ -34,6 +45,7 @@ public:
     void load_picture(std::vector<Engine::Triangle>);
 protected:
     mutable std::vector<Command> _commands;
+    
     std::vector<Engine::Triangle> _picture;
 };
 

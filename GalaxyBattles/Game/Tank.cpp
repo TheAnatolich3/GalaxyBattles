@@ -20,6 +20,7 @@ Tank::Tank(const Engine& engine)
 	this->addNode(_body);
 
     _shot = engine.audioManager().createSound("../../../../GalaxyBattles/EtanolEngine/resource/shot_ev.wav", false, 100);
+    engine.eventsManager().add_delegate(this);
 }
 
 void Tank::handle_event(EventsManager::QuitEvent)

@@ -7,6 +7,7 @@
 #include <EventsManager.hpp>
 #include <memory>
 #include <AudioManager.hpp>
+#include <UIManager.hpp>
 #include <imgui.h>
 
 class Window;
@@ -25,7 +26,7 @@ public:
 		Vertex v1, v2, v3;
 	};
 
-	explicit Engine(std::shared_ptr<EventsManager> ea);
+	explicit Engine();
 	~Engine();
 
 	void init(std::string_view name_window, size_t width, size_t height, std::string mode_input);
@@ -52,9 +53,10 @@ private:
 	bool _isActive = false;
 
 	std::unique_ptr<Window> _window;
-	std::shared_ptr<EventsManager> _eventsManager;
+	std::unique_ptr<EventsManager> _eventsManager;
 	std::unique_ptr<AudioManager> _audioManager;
 	std::unique_ptr<Renderer> _renderer;
+	std::unique_ptr<UIManager> _UIManager;
 	
 	std::shared_ptr<Node> _scene;
 };

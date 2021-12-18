@@ -9,7 +9,7 @@ class Bitmap
 {
 public:
 	explicit Bitmap(std::string_view filepath);
-
+	explicit Bitmap(int count_channels, std::vector<unsigned char> data, glm::vec2 size);
 	const std::vector<unsigned char>& getImage() const;
 
 	int getColorCountChannels() const;

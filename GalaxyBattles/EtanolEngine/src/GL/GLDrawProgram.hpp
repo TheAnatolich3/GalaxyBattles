@@ -1,12 +1,8 @@
 #ifndef GAME_GLDRAWPROGRAM_HPP
 #define GAME_GLDRAWPROGRAM_HPP
 
-#include <GL/GLProgram.hpp>
-#include <GL/GLTexture.hpp>
-
-#include <EventsManager.hpp>
-
 #include <cstdint>
+#include <GL/GLProgram.hpp>
 
 class Engine;
 

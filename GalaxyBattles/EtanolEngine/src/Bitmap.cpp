@@ -41,6 +41,12 @@ Bitmap::Bitmap(std::string_view filepath)
 	stbi_image_free(img);
 }
 
+Bitmap::Bitmap(int count_channels, std::vector<unsigned char> data, glm::vec2 size)
+	: _cnt_color_channels(count_channels), _size(size)
+{
+	_image = std::move(data);
+}
+
 const std::vector<unsigned char>& Bitmap::getImage() const
 {
 	return _image;

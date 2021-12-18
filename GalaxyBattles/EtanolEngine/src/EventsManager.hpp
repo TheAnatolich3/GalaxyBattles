@@ -53,9 +53,9 @@ public:
 		}
 	}
 
-	void add_delegate(Delegate* delegate);
+	void add_delegate(Delegate* delegate) const;
 private:
-	std::vector<Delegate*> _delegates;
+	mutable std::vector<Delegate*> _delegates;
 };
 
 #endif EVENTS_MANAGER_HPP

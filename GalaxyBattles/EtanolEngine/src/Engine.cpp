@@ -5,10 +5,7 @@
 #include <memory>
 #include "Engine.hpp"
 
-Engine::Engine(std::shared_ptr<EventsManager> ea) {
-	_eventsManager = ea;
-	_eventsManager->add_delegate(this);
-}
+Engine::Engine() = default;
 
 Engine::~Engine() = default;
 
@@ -30,11 +27,15 @@ void Engine::init(std::string_view name_window, size_t width, size_t height, std
 	_renderer = _window->createRenderer();
 	_scene = std::make_shared<Node>();
 	_audioManager = std::make_unique<AudioManager>();
+	_UIManager = std::make_unique<UIManager>(*this);
+	_eventsManager = std::make_unique<EventsManager>();
+	_eventsManager->add_delegate(this);
 }
 
 void Engine::update() {
 	_window->update();
 	_scene->visit();
+	//_UIManager->visit();
 	_renderer->draw(6, 0);
 	_window->swap();
 	_audioManager->update();
@@ -90,5 +91,3 @@ const AudioManager& Engine::audioManager() const
 {
 	return *_audioManager;
 }
-
-
