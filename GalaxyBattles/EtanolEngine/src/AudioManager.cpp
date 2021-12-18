@@ -2,16 +2,23 @@
 #include <iostream>
 #include "AudioManager.hpp"
 
+std::shared_ptr<Sound> AudioManager::getSound(size_t index)
+{
+	_lock_sound.lock();
+	std::shared_ptr<Sound> res = _buffers[index].expired() ? nullptr : _buffers[index].lock();
+	_lock_sound.unlock();
+	return res;
+}
 
 void AudioManager::audio_callback(void* userdata, uint8_t* stream, int len)
 {
 	auto audioManager = static_cast<AudioManager*>(userdata);
 	SDL_memset(stream, 0, len);
-	for (auto& buffer : audioManager->_buffers)
+	for (size_t i = 0; i < audioManager->_buffers.size(); ++i)
 	{
-		if (!buffer.expired())
+		auto sound = audioManager->getSound(i);
+		if (sound != nullptr)
 		{
-			auto sound = buffer.lock();
 			if (sound->is_playing())
 			{
 				auto amount = sound->_len_file - sound->_pos;
@@ -79,8 +86,6 @@ AudioManager::AudioManager()
 	}
 }
 
-
-
 std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, bool is_loop, int volume) const
 {
 	std::shared_ptr<Sound> sound = std::make_shared<Sound>(file_name, is_loop, volume);
@@ -91,15 +96,17 @@ std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, boo
 
 void AudioManager::update()
 {
+	//std::lock_guard<std::mutex> lg(_lock_sound);
 	_buffers.erase(std::remove_if(_buffers.begin(), _buffers.end(), [](const std::weak_ptr<Sound>& s) {
 		return s.expired(); }), _buffers.end());
 
 	if (_buffers.size() != 0)
 	{
 		bool is_play = false;
-		for (auto& sound : _buffers)
+		for (size_t i = 0; i < _buffers.size(); ++i)
 		{
-			if (sound.lock()->is_playing())
+			auto sound = this->getSound(i);
+			if (sound->is_playing())
 			{
 				is_play = true;
 				break;
@@ -118,5 +125,6 @@ void AudioManager::update()
 	{
 		SDL_PauseAudioDevice(_audio_device, SDL_TRUE);
 	}
+	
 }
 
