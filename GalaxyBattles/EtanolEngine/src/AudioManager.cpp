@@ -2,21 +2,14 @@
 #include <iostream>
 #include "AudioManager.hpp"
 
-std::shared_ptr<Sound> AudioManager::getSound(size_t index)
-{
-	_lock_sound.lock();
-	std::shared_ptr<Sound> res = _buffers[index].expired() ? nullptr : _buffers[index].lock();
-	_lock_sound.unlock();
-	return res;
-}
-
 void AudioManager::audio_callback(void* userdata, uint8_t* stream, int len)
 {
 	auto audioManager = static_cast<AudioManager*>(userdata);
 	SDL_memset(stream, 0, len);
-	for (size_t i = 0; i < audioManager->_buffers.size(); ++i)
+	audioManager->_lock_buffer.lock();
+	for (auto& buffer : audioManager->_buffers)
 	{
-		auto sound = audioManager->getSound(i);
+		auto sound = buffer.lock();
 		if (sound != nullptr)
 		{
 			if (sound->is_playing())
@@ -49,6 +42,7 @@ void AudioManager::audio_callback(void* userdata, uint8_t* stream, int len)
 			}
 		}
 	}
+	audioManager->_lock_buffer.unlock();
 }
 
 AudioManager::AudioManager()
@@ -59,7 +53,7 @@ AudioManager::AudioManager()
 	_wanted_spec.format = AUDIO_S16LSB;
 	_wanted_spec.channels = 2;
 	_wanted_spec.samples = 4096;
-	_wanted_spec.callback = this->audio_callback;
+	_wanted_spec.callback = AudioManager::audio_callback;
 	_wanted_spec.userdata = this;
 
 	SDL_AudioSpec returned{};
@@ -96,16 +90,16 @@ std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, boo
 
 void AudioManager::update()
 {
-	//std::lock_guard<std::mutex> lg(_lock_sound);
+	_lock_buffer.lock();
 	_buffers.erase(std::remove_if(_buffers.begin(), _buffers.end(), [](const std::weak_ptr<Sound>& s) {
 		return s.expired(); }), _buffers.end());
-
+	_lock_buffer.unlock();
 	if (_buffers.size() != 0)
 	{
 		bool is_play = false;
-		for (size_t i = 0; i < _buffers.size(); ++i)
+		for (auto buffer : _buffers)
 		{
-			auto sound = this->getSound(i);
+			auto sound = buffer.lock();
 			if (sound->is_playing())
 			{
 				is_play = true;
@@ -125,6 +119,5 @@ void AudioManager::update()
 	{
 		SDL_PauseAudioDevice(_audio_device, SDL_TRUE);
 	}
-	
 }
 
