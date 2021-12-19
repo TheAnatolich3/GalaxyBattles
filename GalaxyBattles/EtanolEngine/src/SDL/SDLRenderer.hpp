@@ -1,10 +1,12 @@
 #ifndef GAME_SDLRENDERER_HPP
 #define GAME_SDLRENDERER_HPP
 #include <Renderer.hpp>
-#include <SDL.h>
 #include <memory>
 #include <string_view>
-#include <Bitmap.hpp>
+
+class Bitmap;
+class SDL_Window;
+class SDL_Renderer;
 
 class SDLRenderer final : public Renderer
 {
@@ -19,7 +21,7 @@ public:
     std::shared_ptr<ShaderProgram> createProgram(std::string_view name) const override;
     std::shared_ptr<Texture> createTexture(Bitmap bitmap) const override;
 
-    void draw(int count, int pos) override;
+    void draw() override;
 private:
     std::shared_ptr<SDL_Window> _sdlWindow;
     std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> _sdlRenderer;
@@ -31,4 +33,4 @@ private:
 };
 
 
-#endif //GAME_SDLRENDERER_HPP
+#endif GAME_SDLRENDERER_HPP

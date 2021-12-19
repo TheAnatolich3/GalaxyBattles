@@ -3,12 +3,10 @@
 
 #include <string>
 #include <string_view>
-#include <iostream>
 #include <EventsManager.hpp>
 #include <memory>
 #include <AudioManager.hpp>
 #include <UIManager.hpp>
-#include <imgui.h>
 
 class Window;
 class Renderer;

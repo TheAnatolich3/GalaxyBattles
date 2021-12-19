@@ -1,33 +1,10 @@
-#include <string>
-#include <iostream>
-#include <Bitmap.hpp>
+#include <string_view>
 #include <GL/GLVertexBuffer.hpp>
 #include <GL/GLDrawProgram.hpp>
 #include <GL/GLTexture.hpp>
+#include <GL/glew.h>
+#include <stdexcept>
 #include "GLRenderer.hpp"
-
-void check_errors(std::string_view file, int line)
-{
-	GLenum err(glGetError());
-
-	while (err != GL_NO_ERROR)
-	{
-		std::string error;
-
-		switch (err)
-		{
-		case GL_INVALID_OPERATION: error = "INVALID_OPERATION"; break;
-		case GL_INVALID_ENUM: error = "INVALID_ENUM"; break;
-		case GL_INVALID_VALUE: error = "INVALID_VALUE"; break;
-		case GL_OUT_OF_MEMORY: error = "OUT_OF_MERORY"; break;
-		case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
-		default: error = "UNKNOWN"; break;
-		}
-		std::cerr << "GL_" << error << " : 0x" << std::hex << err << std::dec << " - " << file << ": " << line << std::endl;
-		err = glGetError();
-	}
-}
-
 
 GLRenderer::GLRenderer(const Engine& engine, SDL_Window* window)
     : _engine(engine)
@@ -51,7 +28,7 @@ GLRenderer::GLRenderer(const Engine& engine, SDL_Window* window)
 	glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void GLRenderer::draw(int count, int pos)
+void GLRenderer::draw()
 {
 	glDisable(GL_SCISSOR_TEST);
 	glDisable(GL_CULL_FACE);

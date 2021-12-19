@@ -3,6 +3,8 @@
 #include <chrono>
 #include "Sprite.hpp"
 
+class Sound;
+
 class Tank : public EventsManager::Delegate, public Node
 {
 public:

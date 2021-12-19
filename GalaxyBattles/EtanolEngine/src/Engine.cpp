@@ -36,7 +36,7 @@ void Engine::update() {
 	_window->update();
 	_scene->visit();
 	//_UIManager->visit();
-	_renderer->draw(6, 0);
+	_renderer->draw();
 	_window->swap();
 	_audioManager->update();
 }

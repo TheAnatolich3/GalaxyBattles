@@ -37,7 +37,7 @@ public:
         _commands.push_back(std::move(command));
     }
 
-    virtual void draw(int count, int pos) = 0;
+    virtual void draw() = 0;
 
     virtual std::shared_ptr<VertexBuffer> createVertexBuffer(MeshData data) const = 0;
     virtual std::shared_ptr<ShaderProgram> createProgram(std::string_view name) const = 0;

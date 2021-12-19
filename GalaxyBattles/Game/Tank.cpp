@@ -1,4 +1,7 @@
 #include <glm/gtx/rotate_vector.hpp>
+#include <Sound.hpp>
+#include <Engine.hpp>
+#include <AudioManager.hpp>
 #include "Tank.hpp"
 
 

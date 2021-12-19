@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <iostream>
+#include <SDL.h>
 #include "AudioManager.hpp"
 
 void AudioManager::audio_callback(void* userdata, uint8_t* stream, int len)

@@ -5,6 +5,7 @@
 #include <Renderer.hpp>
 #include <MeshData.hpp>
 #include <ShaderProgram.hpp>
+#include <imgui.h>
 #include "UIManager.hpp"
 
 UIManager::UIManager(const Engine& engine)

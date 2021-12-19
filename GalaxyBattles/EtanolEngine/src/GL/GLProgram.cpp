@@ -1,15 +1,13 @@
 #include <iostream>
-#include <string>
 #include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <GL/GLTexture.hpp>
 #include "GLProgram.hpp"
 
-
-GLProgram::GLProgram(std::string vs_str, std::string ps_str)
+GLProgram::GLProgram(std::string_view vs_str, std::string_view ps_str)
 {
-    const char* vs= vs_str.c_str();
-    const char* ps = ps_str.c_str();
+    const char* vs= vs_str.data();
+    const char* ps = ps_str.data();
     _vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(_vertexShader, 1, &vs, nullptr);
     glCompileShader(_vertexShader);

@@ -1,8 +1,9 @@
 #ifndef SOUND_HPP
 #define SOUND_HPP
 #include <string_view>
-#include <SDL.h>
 #include <memory>
+#include <SDL_audio.h>
+#include <SDL.h>
 
 class Sound
 {

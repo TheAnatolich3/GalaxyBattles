@@ -3,11 +3,10 @@
 #define GAME_SDLWINDOW_HPP
 
 #include <Window.hpp>
-
-#include <SDL.h>
 #include <string_view>
 
 class Engine;
+class SDL_Window;
 
 class SDLWindow final : public Window
 {

@@ -1,6 +1,8 @@
-#include "GLVertexBuffer.hpp"
 #include <GL/glew.h>
+#include <MeshData.hpp>
+#include <Engine.hpp>
 #include <Renderer.hpp>
+#include "GLVertexBuffer.hpp"
 
 GLVertexBuffer::GLVertexBuffer(const Engine& engine, MeshData data): _engine(engine)
 {

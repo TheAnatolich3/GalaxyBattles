@@ -2,13 +2,12 @@
 #define GL_RENDERER_HPP
 #include <Renderer.hpp>
 #include <SDL.h>
-#include <GL/glew.h>
 
 class GLRenderer : public Renderer
 {
 public:
 	GLRenderer(const Engine& engine, SDL_Window* window);
-	void draw(int count, int pos) override;
+	void draw() override;
 	std::shared_ptr<VertexBuffer> createVertexBuffer(MeshData data) const override;
 	std::shared_ptr<ShaderProgram> createProgram(std::string_view name) const override;
 	std::shared_ptr<Texture> createTexture(Bitmap bitmap) const override;

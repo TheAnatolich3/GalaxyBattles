@@ -1,4 +1,5 @@
 #include <GL/glew.h>
+#include <Bitmap.hpp>
 #include "GLTexture.hpp"
 
 

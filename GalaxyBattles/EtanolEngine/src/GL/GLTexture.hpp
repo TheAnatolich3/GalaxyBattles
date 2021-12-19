@@ -1,8 +1,8 @@
 #ifndef GLTEXTURE_HPP
 #define GLTEXTURE_HPP
-
-#include <Bitmap.hpp>
 #include <Texture.hpp>
+
+class Bitmap;
 
 class GLTexture : public Texture
 {

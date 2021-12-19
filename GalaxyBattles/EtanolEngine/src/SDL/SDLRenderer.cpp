@@ -1,5 +1,5 @@
-#pragma once
-#include <iostream>
+#include <SDL.h>
+#include <Bitmap.hpp>
 #include "SdlRenderer.hpp"
 
 SDLRenderer::SDLRenderer(const Engine& engine, std::shared_ptr<SDL_Window> sdlWindow)
@@ -9,7 +9,7 @@ SDLRenderer::SDLRenderer(const Engine& engine, std::shared_ptr<SDL_Window> sdlWi
 {
 }
 
-void SDLRenderer::draw(int count, int pos)
+void SDLRenderer::draw()
 {
 	int screen_width = static_cast<int>(_engine.get_window_width());
 	int screen_height = static_cast<int>(_engine.get_window_height());

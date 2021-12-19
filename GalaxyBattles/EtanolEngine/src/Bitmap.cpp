@@ -1,7 +1,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stdexcept>
 #include <SDL.h>
-#include <iostream>
 #include <stbi/stb_image.h>
 #include "Bitmap.hpp"
 
@@ -26,7 +25,6 @@ Bitmap::Bitmap(std::string_view filepath)
 
 	auto img = stbi_load_from_memory(data.data(), static_cast<int>(data.size()), &width, &height, &_cnt_color_channels, 0);
 
-	std::cout << width << " " << height << " " << _cnt_color_channels <<std::endl;
 	if (img == nullptr)
 	{
 		throw std::runtime_error("unsupported file foramt: " + std::string{ filepath });

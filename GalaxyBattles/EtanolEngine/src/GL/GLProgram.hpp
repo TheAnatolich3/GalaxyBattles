@@ -2,17 +2,13 @@
 #define GLPROGRAM_HPP
 
 #include <ShaderProgram.hpp>
-
-#include <cstdint>
 #include <string_view>
-#include <string>
-#include <glm/glm.hpp>
 
 class GLProgram : public ShaderProgram
 {
 public:
 
-    GLProgram(std::string vs, std::string ps);
+    GLProgram(std::string_view vs, std::string_view ps);
     ~GLProgram() override;
 
     std::shared_ptr<TextureUniform> createTextureUniform(std::string_view name) override;

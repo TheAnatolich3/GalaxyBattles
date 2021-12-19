@@ -1,4 +1,6 @@
-#include <string>
+#ifndef AUDIO_MANAGER_HPP
+#define AUDIO_MANAGER_HPP
+
 #include <string_view>
 #include <vector>
 #include <memory>
@@ -21,3 +23,4 @@ private:
 	mutable std::vector<std::weak_ptr<Sound>> _buffers;
 	std::mutex _lock_buffer;
 };
+#endif AUDIO_MANAGER_HPP

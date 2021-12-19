@@ -8,7 +8,6 @@ class Texture;
 class TextureUniform;
 class Vec2Uniform;
 class ShaderProgram;
-class Renderer;
 class Mat3Uniform;
 
 class UIManager final
