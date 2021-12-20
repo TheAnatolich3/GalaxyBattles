@@ -56,9 +56,9 @@ void SDLWindow::update()
     }
     else if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP)
     {
-        EventsManager::KeyType type = EventsManager::KeyType::KeyUp;
+        EventsManager::Action type = EventsManager::Action::Up;
         if (e.type == SDL_KEYDOWN)
-            type = EventsManager::KeyType::KeyDown;
+            type = EventsManager::Action::Down;
         EventsManager::KeyCode code = EventsManager::KeyCode::Unknown;
 
         switch (e.key.keysym.sym)
@@ -87,6 +87,11 @@ void SDLWindow::update()
         default: break;
         }
         event_manager.invoke_event(EventsManager::KeyEvent{ code, type });
+    }
+    else if ((e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) && e.button.button == SDL_BUTTON_LEFT)
+    {
+        EventsManager::Action t = (e.type == SDL_MOUSEBUTTONDOWN) ? EventsManager::Action::Down : EventsManager::Action::Up;
+        event_manager.invoke_event(EventsManager::MouseEvent{ e.button.x, e.button.y, t});
     }
 }
 

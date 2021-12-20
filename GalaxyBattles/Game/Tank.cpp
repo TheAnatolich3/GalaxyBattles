@@ -2,6 +2,7 @@
 #include <Sound.hpp>
 #include <Engine.hpp>
 #include <AudioManager.hpp>
+#include <Sprite.hpp>
 #include "Tank.hpp"
 
 
@@ -40,35 +41,35 @@ void Tank::handle_event(EventsManager::KeyEvent ev)
 {
     if (ev.key == EventsManager::KeyCode::Up)
     {
-        _isUp = (ev.type == EventsManager::KeyType::KeyDown);
+        _isUp = (ev.type == EventsManager::Action::Down);
     }
 
     if (ev.key == EventsManager::KeyCode::Down)
     {
-        _isDown = (ev.type == EventsManager::KeyType::KeyDown);
+        _isDown = (ev.type == EventsManager::Action::Down);
     }
 
     if (ev.key == EventsManager::KeyCode::Left)
     {
-        _isLeft = (ev.type == EventsManager::KeyType::KeyDown);
+        _isLeft = (ev.type == EventsManager::Action::Down);
     }
 
     if (ev.key == EventsManager::KeyCode::Right)
     {
-        _isRight = (ev.type == EventsManager::KeyType::KeyDown);
+        _isRight = (ev.type == EventsManager::Action::Down);
     }
 
     if (ev.key == EventsManager::KeyCode::A)
     {
-        _isA = (ev.type == EventsManager::KeyType::KeyDown);
+        _isA = (ev.type == EventsManager::Action::Down);
     }
 
     if (ev.key == EventsManager::KeyCode::D)
     {
-        _isD = (ev.type == EventsManager::KeyType::KeyDown);
+        _isD = (ev.type == EventsManager::Action::Down);
     }
 
-    if (ev.key == EventsManager::KeyCode::Space && ev.type == EventsManager::KeyType::KeyDown)
+    if (ev.key == EventsManager::KeyCode::Space && ev.type == EventsManager::Action::Down)
     {
         _shot->stop();
         _shot->play();

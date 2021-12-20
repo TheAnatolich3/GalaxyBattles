@@ -18,30 +18,31 @@ public:
 		Unknown
 	};
 
-	enum class KeyType
+	enum class Action
 	{
-		KeyDown,
-		KeyUp
+		Down,
+		Up
 	};
 
 	struct KeyEvent
 	{
 		KeyCode key;
-		KeyType type;
+		Action type;
 	};
 
 	struct MouseEvent
 	{
 		int x, y;
+		Action type;
 	};
 
 	struct QuitEvent { };
 
 	struct Delegate
 	{
-		virtual void handle_event(QuitEvent) = 0;
-		virtual void handle_event(KeyEvent) = 0;
-		//virtual void handle_event(MouseEvent) = 0;
+		virtual void handle_event(QuitEvent) {};
+		virtual void handle_event(KeyEvent) {};
+		virtual void handle_event(MouseEvent) {};
 	};
 
 	template<typename T>

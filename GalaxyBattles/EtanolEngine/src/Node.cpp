@@ -1,17 +1,21 @@
-#include "Node.hpp"
 #include <glm/gtx/matrix_transform_2d.hpp>
+#include <algorithm>
+#include "Node.hpp"
+
 
 void Node::addNode(std::shared_ptr<Node> node)
 {
 	if (node != nullptr)
 	{
 		node->_parent = this;
-		_nodes.push_back(std::move(node));
+		_nodes.insert(std::upper_bound(_nodes.begin(), _nodes.end(), node, [](std::shared_ptr<Node> lfs, std::shared_ptr<Node> rhs) {
+			return lfs->getOrder() < rhs->getOrder(); }), node);
 	}
 }
 
 void Node::removeNode(std::shared_ptr<Node> node)
 {
+
 	auto it = std::find(_nodes.begin(), _nodes.end(), node);
 	_nodes.erase(it);
 }
@@ -28,10 +32,16 @@ Node* Node::getParent()
 
 void Node::visit()
 {
-	this->visitSelf();
-	for (auto node : _nodes)
+	auto divide_bound = std::upper_bound(_nodes.begin(), _nodes.end(), this, [](Node* lfs, std::shared_ptr<Node> rhs) {
+		return lfs->getOrder() >= rhs->getOrder(); });
+	for (auto iter = _nodes.begin(); iter != divide_bound; ++iter)
 	{
-		node->visit();
+		iter->get()->visit();
+	}
+	this->visitSelf();
+	for (auto iter = divide_bound; iter != _nodes.end(); ++iter)
+	{
+		iter->get()->visit();
 	}
 }
 
@@ -109,4 +119,14 @@ const glm::vec2& Node::getSize() const
 std::vector<std::shared_ptr<Node>> Node::getChilds()
 {
 	return _nodes;
+}
+
+int Node::getOrder() const
+{
+	return _zOrder;
+}
+
+void Node::setOrder(int value)
+{
+	_zOrder = value;
 }

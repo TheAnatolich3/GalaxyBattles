@@ -36,6 +36,8 @@ public:
 	glm::mat3 getTransform();
 	std::vector<std::shared_ptr<Node>> getChilds();
 
+	int getOrder() const;
+	void setOrder(int value);
 protected:
 	virtual void visitSelf() {};
 
@@ -48,6 +50,7 @@ protected:
 	glm::float32 _rotation = 0.0f;
 	glm::vec2 _contentSize = glm::vec2(0.0f);
 	std::optional<glm::mat3> _transform;
+	int _zOrder = 0;
 };
 
 #endif NODE_HPP

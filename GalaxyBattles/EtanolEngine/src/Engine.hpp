@@ -33,7 +33,7 @@ public:
 	bool isActive();
 
 	void handle_event(EventsManager::QuitEvent ev);
-	void handle_event(EventsManager::KeyEvent);
+	void handle_event(EventsManager::KeyEvent ke);
 
 	void load_picture(std::vector<Triangle> model);
 

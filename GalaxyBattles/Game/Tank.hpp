@@ -1,9 +1,13 @@
+#ifndef  TANK_HPP
+#define TANK_HPP
+
 #include <memory>
 #include <EventsManager.hpp>
+#include <Node.hpp>
 #include <chrono>
-#include "Sprite.hpp"
 
 class Sound;
+class Sprite;
 
 class Tank : public EventsManager::Delegate, public Node
 {
@@ -31,3 +35,4 @@ private:
 	std::chrono::steady_clock::time_point _prevTime;
 	std::shared_ptr<Sound> _shot;
 };
+#endif TANK_HPP

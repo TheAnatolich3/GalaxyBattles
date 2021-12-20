@@ -8,6 +8,9 @@
 #include <EventsManager.hpp>
 #include <Sound.hpp>
 #include <iostream>
+#include <Node.hpp>
+#include <Button.hpp>
+	
 #include "Game/Tank.hpp"
 
 using namespace std;
@@ -77,10 +80,21 @@ int main(int argc, char* argv[])
 	std::shared_ptr<Tank> tank = std::make_shared<Tank>(engine);
 	engine.scene()->addNode(tank);
 	
+	std::shared_ptr<Button> _stop_button = make_shared<Button>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/stop_button.png");
+	_stop_button->setOrder(-1);
+	engine.scene()->addNode(_stop_button);
 	std::shared_ptr<Sound> _music_back = engine.audioManager().createSound("../../../../GalaxyBattles/EtanolEngine/resource/back_short_ev.wav", true, 10);
 	_music_back->play();
 
 	while (engine.isActive()) {
+		if (_stop_button->getStatus())
+		{
+			_music_back->pause();
+		}
+		else
+		{
+			_music_back->play();
+		}
 		engine.update();
 	}
 
