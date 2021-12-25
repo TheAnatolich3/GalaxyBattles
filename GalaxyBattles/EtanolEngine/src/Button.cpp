@@ -23,11 +23,11 @@ void Button::handle_event(EventsManager::MouseEvent me)
 {
 	glm::vec2 button_size = _body->getSize();
 	glm::vec2 buttom_pos = this->getPosition();
-	if (me.x > buttom_pos.x - button_size.x / 2
-		&& me.x < buttom_pos.x + button_size.x / 2
-		&& me.y > buttom_pos.y - button_size.y / 2
-		&& me.y < buttom_pos.y + button_size.y / 2
-		&& me.type == EventsManager::Action::Down)
+	if (me.mousePos.x > buttom_pos.x - button_size.x / 2
+		&& me.mousePos.x < buttom_pos.x + button_size.x / 2
+		&& me.mousePos.y > buttom_pos.y - button_size.y / 2
+		&& me.mousePos.y < buttom_pos.y + button_size.y / 2
+		&& me.type == EventsManager::MouseEvent::Type::LButtonDown)
 	{
 		this->setScale(glm::vec2(0.8f));
 		status = !status;

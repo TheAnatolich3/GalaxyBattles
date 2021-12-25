@@ -29,6 +29,7 @@ void Engine::init(std::string_view name_window, size_t width, size_t height, std
 	_audioManager = std::make_unique<AudioManager>();
 	_UIManager = std::make_unique<UIManager>(*this);
 	_eventsManager = std::make_unique<EventsManager>();
+	_eventsManager->add_delegate(_UIManager.get());
 	_eventsManager->add_delegate(this);
 }
 

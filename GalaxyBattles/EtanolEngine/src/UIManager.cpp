@@ -37,6 +37,10 @@ UIManager::UIManager(const Engine& engine)
 
 	_screenSizeUniform = _command.program->createVec2Uniform("uScreenSize");
 	_transformUniform = _command.program->createMat3Uniform("uTransform");
+
+	_command.uniforms.push_back(_transformUniform);
+	_command.uniforms.push_back(_screenSizeUniform);
+	_command.uniforms.push_back(_textureUniform);
 }
 
 void UIManager::visit()
@@ -44,8 +48,17 @@ void UIManager::visit()
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2(_engine.get_window_width(), _engine.get_window_height());
 
+	io.MousePos = { _mousePos.x, _mousePos.y };
+
+	io.MouseDown[0] = _lMousePressed;
+	io.MouseDown[1] = _rMousePressed;
+	io.MouseDown[2] = _mMousePressed;
+
+	io.MouseWheel = _mouseWheel;
+	_mouseWheel = 0.0f;
+
 	ImGui::NewFrame();
-	static bool show_demo_window = false;
+
 	ImGui::ShowDemoWindow(&show_demo_window);
 	ImGui::Render();
 
@@ -97,5 +110,19 @@ void UIManager::visit()
 
 			offset += pcmd->ElemCount;
 		}
+	}
+}
+
+void UIManager::handle_event(EventsManager::MouseEvent me)
+{
+	switch (me.type)
+	{
+	case EventsManager::MouseEvent::Type::LButtonDown: _lMousePressed = true; break;
+	case EventsManager::MouseEvent::Type::RButtonDown: _rMousePressed = true; break;
+	case EventsManager::MouseEvent::Type::MButtonDown: _mMousePressed = true; break;
+	case EventsManager::MouseEvent::Type::LButtonUp: _lMousePressed = false; break;
+	case EventsManager::MouseEvent::Type::RButtonUp: _rMousePressed = false; break;
+	case EventsManager::MouseEvent::Type::MButtonUp: _mMousePressed = false; break;
+	case EventsManager::MouseEvent::Type::Move: _mousePos = me.mousePos; break;
 	}
 }

@@ -50,7 +50,11 @@ void GLRenderer::draw()
 				glProgram->activate();
 				if (command.scissor)
 				{
-					glScissor(command.scissor->r, command.scissor->g, command.scissor->b, command.scissor->a);
+					glScissor(
+						static_cast<GLint>(command.scissor->x),
+						static_cast<GLint>(_engine.get_window_height() - command.scissor->w),
+						static_cast<GLsizei>(command.scissor->z - command.scissor->x),
+						static_cast<GLsizei>(command.scissor->w - command.scissor->y));
 				}
 				else
 				{

@@ -15,7 +15,6 @@ void Node::addNode(std::shared_ptr<Node> node)
 
 void Node::removeNode(std::shared_ptr<Node> node)
 {
-
 	auto it = std::find(_nodes.begin(), _nodes.end(), node);
 	_nodes.erase(it);
 }

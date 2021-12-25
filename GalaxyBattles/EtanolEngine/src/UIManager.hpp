@@ -4,6 +4,7 @@
 #include <memory>
 #include <Renderer.hpp>
 #include <glm/glm.hpp>
+#include <EventsManager.hpp>
 
 class Engine;
 class Texture;
@@ -11,12 +12,12 @@ class TextureUniform;
 class Vec2Uniform;
 class Mat3Uniform;
 
-class UIManager final
+class UIManager final : public EventsManager::Delegate
 {
 public:
 	explicit UIManager(const Engine& engine);
 	void visit();
-
+	void handle_event(EventsManager::MouseEvent me) override;
 private:
 	const Engine& _engine;
 
