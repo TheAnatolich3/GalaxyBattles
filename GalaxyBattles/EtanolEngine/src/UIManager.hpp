@@ -17,7 +17,9 @@ class UIManager final : public EventsManager::Delegate
 public:
 	explicit UIManager(const Engine& engine);
 	void visit();
-	void handle_event(EventsManager::MouseEvent me) override;
+	void handle_event(EventsManager::MouseEvent) override;
+	void handle_event(EventsManager::TextInputEvent) override;
+	void handle_event(EventsManager::MouseWheelEvent) override;
 private:
 	const Engine& _engine;
 

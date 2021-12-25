@@ -5,6 +5,7 @@
 #include <MeshData.hpp>
 #include <ShaderProgram.hpp>
 #include <imgui.h>
+#include <iostream>
 #include "UIManager.hpp"
 
 UIManager::UIManager(const Engine& engine)
@@ -124,5 +125,23 @@ void UIManager::handle_event(EventsManager::MouseEvent me)
 	case EventsManager::MouseEvent::Type::RButtonUp: _rMousePressed = false; break;
 	case EventsManager::MouseEvent::Type::MButtonUp: _mMousePressed = false; break;
 	case EventsManager::MouseEvent::Type::Move: _mousePos = me.mousePos; break;
+	}
+}
+
+void UIManager::handle_event(EventsManager::TextInputEvent e)
+{
+	ImGuiIO& io = ImGui::GetIO();
+	io.AddInputCharactersUTF8(e.string.data());
+}
+
+void UIManager::handle_event(EventsManager::MouseWheelEvent e)
+{
+	if (e.value > 0)
+	{
+		_mouseWheel = 1;
+	}
+	if (e.value < 0)
+	{
+		_mouseWheel = -1;
 	}
 }

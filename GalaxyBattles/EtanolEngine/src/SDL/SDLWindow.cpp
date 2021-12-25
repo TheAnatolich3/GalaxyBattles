@@ -51,9 +51,9 @@ void SDLWindow::update()
     const auto& event_manager = _engine.eventsManager();
 
     SDL_PollEvent(&e);
-    if (e.type == SDL_QUIT) 
+    if (e.type == SDL_QUIT)
     {
-         event_manager.invoke_event(EventsManager::QuitEvent{});
+        event_manager.invoke_event(EventsManager::QuitEvent{});
     }
     else if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP)
     {
@@ -94,9 +94,9 @@ void SDLWindow::update()
         EventsManager::MouseEvent ev;
         switch (e.button.button)
         {
-            case SDL_BUTTON_LEFT: ev.type = EventsManager::MouseEvent::Type::LButtonDown; break;
-            case SDL_BUTTON_RIGHT: ev.type = EventsManager::MouseEvent::Type::RButtonDown; break;
-            case SDL_BUTTON_MIDDLE: ev.type = EventsManager::MouseEvent::Type::MButtonDown; break;
+        case SDL_BUTTON_LEFT: ev.type = EventsManager::MouseEvent::Type::LButtonDown; break;
+        case SDL_BUTTON_RIGHT: ev.type = EventsManager::MouseEvent::Type::RButtonDown; break;
+        case SDL_BUTTON_MIDDLE: ev.type = EventsManager::MouseEvent::Type::MButtonDown; break;
         }
 
         ev.mousePos = glm::vec2(e.button.x, e.button.y);
@@ -120,6 +120,14 @@ void SDLWindow::update()
     else if (e.type == SDL_MOUSEMOTION)
     {
         event_manager.invoke_event(EventsManager::MouseEvent{ EventsManager::MouseEvent::Type::Move, glm::vec2(e.button.x, e.button.y) });
+    }
+    else if (e.type == SDL_TEXTINPUT)
+    {
+        event_manager.invoke_event(EventsManager::TextInputEvent{ e.text.text });
+    }
+    else if (e.type == SDL_MOUSEWHEEL)
+    {
+        event_manager.invoke_event(EventsManager::MouseWheelEvent{e.wheel.y});
     }
 }
 

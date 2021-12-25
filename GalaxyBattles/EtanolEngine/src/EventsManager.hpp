@@ -3,6 +3,7 @@
 #define EVENTS_MANAGER_HPP
 #include <vector>
 #include <glm/glm.hpp>
+#include <string>
 
 class EventsManager {
 public:
@@ -48,11 +49,35 @@ public:
 
 	struct QuitEvent { };
 
+	struct TextInputEvent
+	{
+		std::string string;
+		bool isBackspace = false;
+
+
+		explicit TextInputEvent(std::string string)
+			: string(std::move(string))
+		{}
+
+
+		TextInputEvent() :
+			isBackspace(true)
+		{}
+	};
+
+	struct MouseWheelEvent
+	{
+		int value;
+		explicit MouseWheelEvent(int value) : value(value) { }
+	};
+
 	struct Delegate
 	{
 		virtual void handle_event(QuitEvent) {};
 		virtual void handle_event(KeyEvent) {};
 		virtual void handle_event(MouseEvent) {};
+		virtual void handle_event(TextInputEvent) {};
+		virtual void handle_event(MouseWheelEvent) {};
 	};
 
 	template<typename T>
