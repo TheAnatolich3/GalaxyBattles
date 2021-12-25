@@ -4,6 +4,7 @@
 #include <memory>
 #include <string_view>
 
+class Engine;
 class Bitmap;
 class SDL_Window;
 class SDL_Renderer;

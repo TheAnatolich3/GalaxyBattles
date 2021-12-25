@@ -2,34 +2,38 @@
 #ifndef GAME_RENDERER_HPP
 #define GAME_RENDERER_HPP
 
-#include <Engine.hpp>
+#include <vector>
+#include <optional>
+#include <memory>
 #include <MeshData.hpp>
 #include <Bitmap.hpp>
-#include <optional>
 #include <glm/glm.hpp>
 
 class VertexBuffer;
 class ShaderProgram;
 class Texture;
+class Uniform;
 
 class Renderer
 {
 public:
     virtual ~Renderer() = default;
 
-    struct sub_params
-    {
-        int _count = 0;
-        int _offset = 0;
-    };
-
-
     struct Command
     {
-        std::shared_ptr<VertexBuffer>  vertexBuffer;
+        std::shared_ptr<VertexBuffer> vertexBuffer;
         std::shared_ptr<ShaderProgram> program;
-        std::optional<sub_params> _ren;
-        std::optional<glm::vec4> _scissor;
+        std::vector<std::shared_ptr<Uniform>> uniforms;
+
+        std::optional<glm::vec4> scissor;
+
+        struct sub_t
+        {
+            int count = 0;
+            int offset = 0;
+        };
+
+        std::optional<sub_t> ren;
     };
 
     void addCommand(Command command) const
@@ -42,11 +46,8 @@ public:
     virtual std::shared_ptr<VertexBuffer> createVertexBuffer(MeshData data) const = 0;
     virtual std::shared_ptr<ShaderProgram> createProgram(std::string_view name) const = 0;
     virtual std::shared_ptr<Texture> createTexture(Bitmap bitmap) const = 0;
-    void load_picture(std::vector<Engine::Triangle>);
 protected:
     mutable std::vector<Command> _commands;
-    
-    std::vector<Engine::Triangle> _picture;
 };
 
-#endif //GAME_RENDERER_HPP
+#endif GAME_RENDERER_HPP

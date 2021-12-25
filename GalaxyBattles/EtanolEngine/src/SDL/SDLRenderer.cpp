@@ -11,19 +11,7 @@ SDLRenderer::SDLRenderer(const Engine& engine, std::shared_ptr<SDL_Window> sdlWi
 
 void SDLRenderer::draw()
 {
-	int screen_width = static_cast<int>(_engine.get_window_width());
-	int screen_height = static_cast<int>(_engine.get_window_height());
-    for (auto& tr : _picture)
-    {
-		int x0 = screen_width - static_cast<int>((tr.v1.x + 1.) * screen_width / 2.);
-		int y0 = screen_height- static_cast<int>((tr.v1.y + 1.) * screen_height / 2.);
-		int x1 = screen_width - static_cast<int>((tr.v2.x + 1.) * screen_width / 2.);
-		int y1 = screen_height - static_cast<int>((tr.v2.y + 1.) * screen_height / 2.);
-		int x2 = screen_width - static_cast<int>((tr.v3.x + 1.) * screen_width / 2.);
-		int y2 = screen_height - static_cast<int>((tr.v3.y + 1.) * screen_height / 2.);
-		draw_triangle({ x0,y0 }, { x1,y1 }, { x2,y2 });
-    }
-	SDL_RenderPresent(_sdlRenderer.get());
+
 }
 
 void SDLRenderer::draw_line(int x0, int y0, int x1, int y1) {

@@ -1,3 +1,4 @@
+#include <Engine.hpp>
 #include <EventsManager.hpp>
 #include <SDL/SDLRenderer.hpp>
 #include <SDL.h>

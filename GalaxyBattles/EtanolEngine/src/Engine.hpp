@@ -35,8 +35,6 @@ public:
 	void handle_event(EventsManager::QuitEvent ev);
 	void handle_event(EventsManager::KeyEvent ke);
 
-	void load_picture(std::vector<Triangle> model);
-
 	size_t get_window_width() const;
 	size_t get_window_height() const;
 

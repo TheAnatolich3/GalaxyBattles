@@ -2,28 +2,39 @@
 #define UIMANAGER_HPP
 
 #include <memory>
+#include <Renderer.hpp>
+#include <glm/glm.hpp>
 
 class Engine;
 class Texture;
 class TextureUniform;
 class Vec2Uniform;
-class ShaderProgram;
 class Mat3Uniform;
 
 class UIManager final
 {
 public:
-	UIManager(const Engine& engine);
-
+	explicit UIManager(const Engine& engine);
 	void visit();
+
 private:
 	const Engine& _engine;
-	//std::shared_ptr<Texture> _tex;
 
-	std::shared_ptr<ShaderProgram> _program;
+	Renderer::Command _command;
+
 	std::shared_ptr<TextureUniform> _textureUniform;
 	std::shared_ptr<Vec2Uniform> _screenSizeUniform;
 	std::shared_ptr<Mat3Uniform> _transformUniform;
+
+	bool show_demo_window = true;
+
+	bool _rMousePressed = false;
+	bool _lMousePressed = false;
+	bool _mMousePressed = false;
+
+	glm::vec2 _mousePos;
+
+	float _mouseWheel = 0.0f;
 };
 
 #endif UIMANAGER_HPP

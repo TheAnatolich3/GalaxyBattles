@@ -1,7 +1,9 @@
+#include <Engine.hpp>
 #include <string_view>
 #include <GL/GLVertexBuffer.hpp>
 #include <GL/GLDrawProgram.hpp>
 #include <GL/GLTexture.hpp>
+#include <GL/GLParticalBuffer.hpp>
 #include <GL/glew.h>
 #include <stdexcept>
 #include "GLRenderer.hpp"
@@ -46,18 +48,18 @@ void GLRenderer::draw()
 			if (glProgram)
 			{
 				glProgram->activate();
-				if (command._scissor)
+				if (command.scissor)
 				{
-					glScissor(command._scissor->r, command._scissor->g, command._scissor->b, command._scissor->a);
+					glScissor(command.scissor->r, command.scissor->g, command.scissor->b, command.scissor->a);
 				}
 				else
 				{
 					glScissor(0, 0, _engine.get_window_width(), _engine.get_window_height());
 				}
 
-				if (command._ren)
+				if (command.ren)
 				{
-					glVertexBuffer->draw(command._ren->_count, command._ren->_offset);
+					glVertexBuffer->draw(command.ren->count, command.ren->offset);
 				}
 				else
 				{
@@ -88,4 +90,9 @@ std::shared_ptr<ShaderProgram> GLRenderer::createProgram(std::string_view name) 
 std::shared_ptr<Texture> GLRenderer::createTexture(Bitmap bitmap) const
 {
 	return std::make_shared<GLTexture>(std::move(bitmap));
+}
+
+std::shared_ptr<ParticalBuffer> GLRenderer::createrParticalBuffer(std::vector<ParticalBuffer::ParticalData> data)
+{
+	return std::make_shared<GLParticalBuffer>(std::move(data));
 }

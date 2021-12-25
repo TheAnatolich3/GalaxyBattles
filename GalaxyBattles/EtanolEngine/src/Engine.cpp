@@ -35,7 +35,7 @@ void Engine::init(std::string_view name_window, size_t width, size_t height, std
 void Engine::update() {
 	_window->update();
 	_scene->visit();
-	//_UIManager->visit();
+	_UIManager->visit();
 	_renderer->draw();
 	_window->swap();
 	_audioManager->update();
@@ -66,11 +66,6 @@ void Engine::handle_event(EventsManager::KeyEvent ev)
 
 }
 
-
-void Engine::load_picture(std::vector<Triangle> model)
-{
-	_renderer->load_picture(model);
-}
 
 size_t Engine::get_window_width() const
 {

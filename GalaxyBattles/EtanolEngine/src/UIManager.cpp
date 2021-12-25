@@ -2,7 +2,6 @@
 #include <Bitmap.hpp>
 #include <Texture.hpp>
 #include <GL/GLTexture.hpp>
-#include <Renderer.hpp>
 #include <MeshData.hpp>
 #include <ShaderProgram.hpp>
 #include <imgui.h>
@@ -26,20 +25,18 @@ UIManager::UIManager(const Engine& engine)
 	int height = 0;
 	unsigned char* dataPtr;
 	io.Fonts->GetTexDataAsRGBA32(&dataPtr, &width, &height);
-	std::vector<unsigned char> image(dataPtr, dataPtr + (width * height * 4));
+	uint64_t size = static_cast<uint64_t>(width) * static_cast<uint64_t>(height) * 4;
+	std::vector<unsigned char> image(dataPtr, dataPtr + size);
 
 	Bitmap bitmap(4, std::move(image), glm::vec2{ width, height });
 
-	//_tex = _engine.renderer().createTexture(bitmap);
+	_command.program = _engine.renderer().createProgram("draw");
 
-	//_vertexBuffer = engine.renderer().createVertexBuffer(std::move(data));
-	_program = _engine.renderer().createProgram("draw");
-
-	_textureUniform = _program->createTextureUniform("uTexture");
+	_textureUniform = _command.program->createTextureUniform("uTexture");
 	_textureUniform->texture = _engine.renderer().createTexture(std::move(bitmap));
 
-	_screenSizeUniform = _program->createVec2Uniform("uScreenSize");
-	_transformUniform = _program->createMat3Uniform("uTransform");
+	_screenSizeUniform = _command.program->createVec2Uniform("uScreenSize");
+	_transformUniform = _command.program->createMat3Uniform("uTransform");
 }
 
 void UIManager::visit()
@@ -48,7 +45,7 @@ void UIManager::visit()
 	io.DisplaySize = ImVec2(_engine.get_window_width(), _engine.get_window_height());
 
 	ImGui::NewFrame();
-	static bool show_demo_window;
+	static bool show_demo_window = false;
 	ImGui::ShowDemoWindow(&show_demo_window);
 	ImGui::Render();
 
@@ -78,9 +75,27 @@ void UIManager::visit()
 
 		auto vertexBuffer = _engine.renderer().createVertexBuffer(std::move(meshData));
 
-		//command.vertexBuffer = std::move(vertexBuffer);
+		_command.vertexBuffer = std::move(vertexBuffer);
 
+		_screenSizeUniform->value.x = _engine.get_window_width();
+		_screenSizeUniform->value.y = _engine.get_window_height();
+
+		_transformUniform->value = glm::mat3(1.0);
+
+		size_t offset = 0;
+		for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++)
+		{
+			const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
+
+			_command.ren.emplace();
+			_command.ren->count = pcmd->ElemCount;
+			_command.ren->offset = offset * sizeof(std::uint32_t);
+
+			_command.scissor = glm::vec4(pcmd->ClipRect.x, pcmd->ClipRect.y, pcmd->ClipRect.z, pcmd->ClipRect.w);
+
+			_engine.renderer().addCommand(_command);
+
+			offset += pcmd->ElemCount;
+		}
 	}
-	//GLTexture* tex_copy = static_cast<GLTexture*>(_tex.get());
-	//tex_copy->active();
 }
