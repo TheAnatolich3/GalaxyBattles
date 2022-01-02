@@ -83,8 +83,19 @@ int main(int argc, char* argv[])
 	std::shared_ptr<Button> _stop_button = make_shared<Button>(engine, "../../../../GalaxyBattles/EtanolEngine/resource/stop_button.png");
 	_stop_button->setOrder(-1);
 	engine.scene()->addNode(_stop_button);
-	std::shared_ptr<Sound> _music_back = engine.audioManager().createSound("../../../../GalaxyBattles/EtanolEngine/resource/back_short_ev.wav", true, 10);
+	std::shared_ptr<Sound> _music_back = engine.audioManager().createSound("../../../../GalaxyBattles/EtanolEngine/resource/back_short_ev.wav", true, 0.1f);
 	_music_back->play();
+
+	engine.UI_Manager()->addMenuItem(std::make_shared<Menu::BeginItem>("Main menu"));
+	std::shared_ptr<Menu::Button> _playButton = std::make_shared<Menu::Button>("Play");
+	engine.UI_Manager()->addMenuItem(_playButton);
+	engine.UI_Manager()->addMenuItem(std::make_shared<Menu::Button>("Settings"));
+	std::shared_ptr<Menu::Button> _quitButton = std::make_shared<Menu::Button>("Exit");
+	engine.UI_Manager()->addMenuItem(_quitButton);
+	std::shared_ptr<Menu::Slider> _slider = std::make_shared<Menu::Slider>("Volume", 0.0f, 100.0f, 50.0f);
+	engine.UI_Manager()->addMenuItem(_slider);
+	engine.UI_Manager()->addMenuItem(std::make_shared<Menu::EndItem>());
+
 
 	while (engine.isActive()) {
 		if (_stop_button->getStatus())
@@ -96,6 +107,16 @@ int main(int argc, char* argv[])
 			_music_back->play();
 		}
 		engine.update();
+		engine.audioManager().set_volume(_slider->get_percent_value());
+		if (_quitButton->get_clicked_flag())
+		{
+			engine.eventsManager().invoke_event(EventsManager::QuitEvent{});
+		}
+		if (_playButton->get_clicked_flag())
+		{
+			engine.eventsManager().invoke_event(EventsManager::KeyEvent{ EventsManager::KeyCode::Escape, EventsManager::Action::Up });
+			_playButton->setUnclicked();
+		}
 	}
 
 	return 0;

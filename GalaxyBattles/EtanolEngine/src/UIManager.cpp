@@ -6,6 +6,7 @@
 #include <ShaderProgram.hpp>
 #include <imgui.h>
 #include <iostream>
+#include <MenuItem.hpp>
 #include "UIManager.hpp"
 
 UIManager::UIManager(const Engine& engine)
@@ -47,7 +48,7 @@ UIManager::UIManager(const Engine& engine)
 void UIManager::visit()
 {
 	ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize = ImVec2(_engine.get_window_width(), _engine.get_window_height());
+	io.DisplaySize = ImVec2(static_cast<float>(_engine.get_window_width()), static_cast<float>(_engine.get_window_height()));
 
 	io.MousePos = { _mousePos.x, _mousePos.y };
 
@@ -60,7 +61,14 @@ void UIManager::visit()
 
 	ImGui::NewFrame();
 
-	ImGui::ShowDemoWindow(&show_demo_window);
+	//ImGui::ShowDemoWindow(&_show_demo_window);
+	if (_show_menu)
+	{
+		for (auto& item : _menuItems)
+		{
+			item->visit();
+		}
+	}
 	ImGui::Render();
 
 	auto drawData = ImGui::GetDrawData();
@@ -91,8 +99,8 @@ void UIManager::visit()
 
 		_command.vertexBuffer = std::move(vertexBuffer);
 
-		_screenSizeUniform->value.x = _engine.get_window_width();
-		_screenSizeUniform->value.y = _engine.get_window_height();
+		_screenSizeUniform->value.x = static_cast<float>(_engine.get_window_width());
+		_screenSizeUniform->value.y = static_cast<float>(_engine.get_window_height());
 
 		_transformUniform->value = glm::mat3(1.0);
 
@@ -103,7 +111,7 @@ void UIManager::visit()
 
 			_command.ren.emplace();
 			_command.ren->count = pcmd->ElemCount;
-			_command.ren->offset = offset * sizeof(std::uint32_t);
+			_command.ren->offset = static_cast<int>(offset * sizeof(std::uint32_t));
 
 			_command.scissor = glm::vec4(pcmd->ClipRect.x, pcmd->ClipRect.y, pcmd->ClipRect.z, pcmd->ClipRect.w);
 
@@ -143,5 +151,24 @@ void UIManager::handle_event(EventsManager::MouseWheelEvent e)
 	if (e.value < 0)
 	{
 		_mouseWheel = -1;
+	}
+}
+
+void UIManager::addMenuItem(std::shared_ptr<Menu::MenuItem> item)
+{
+	_menuItems.push_back(std::move(item));
+}
+
+void UIManager::removeMenuItem(const std::shared_ptr<Menu::MenuItem>& item)
+{
+	auto it = std::find(_menuItems.begin(), _menuItems.end(), item);
+	_menuItems.erase(it);
+}
+
+void UIManager::handle_event(EventsManager::KeyEvent ev)
+{
+	if (ev.key == EventsManager::KeyCode::Escape && ev.type == EventsManager::Action::Up)
+	{
+		_show_menu = !_show_menu;
 	}
 }

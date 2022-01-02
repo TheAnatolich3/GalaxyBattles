@@ -8,36 +8,39 @@ void AudioManager::audio_callback(void* userdata, uint8_t* stream, int len)
 	auto audioManager = static_cast<AudioManager*>(userdata);
 	SDL_memset(stream, 0, len);
 	audioManager->_lock_buffer.lock();
-	for (auto& buffer : audioManager->_buffers)
+	if (!audioManager->_pause_status)
 	{
-		auto sound = buffer.lock();
-		if (sound != nullptr)
+		for (auto& buffer : audioManager->_buffers)
 		{
-			if (sound->is_playing())
+			auto sound = buffer.lock();
+			if (sound != nullptr)
 			{
-				auto amount = sound->_len_file - sound->_pos;
-				if (amount > len)
+				if (sound->is_playing())
 				{
-					amount = len;
-				}
-
-				SDL_MixAudioFormat(stream,
-					sound->_data + sound->_pos,
-					AUDIO_S16LSB,
-					amount,
-					sound->_volume);
-
-				sound->_pos += amount;
-
-				if (sound->_pos >= sound->_len_file)
-				{
-					if (sound->_isLoop)
+					auto amount = sound->_len_file - sound->_pos;
+					if (amount > len)
 					{
-						sound->_pos = 0;
+						amount = len;
 					}
-					else
+
+					SDL_MixAudioFormat(stream,
+						sound->_data + sound->_pos,
+						AUDIO_S16LSB,
+						amount,
+						static_cast<int>(sound->_volume * SDL_MIX_MAXVOLUME * audioManager->_volume));
+
+					sound->_pos += amount;
+
+					if (sound->_pos >= sound->_len_file)
 					{
-						sound->stop();
+						if (sound->_isLoop)
+						{
+							sound->_pos = 0;
+						}
+						else
+						{
+							sound->stop();
+						}
 					}
 				}
 			}
@@ -81,7 +84,7 @@ AudioManager::AudioManager()
 	}
 }
 
-std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, bool is_loop, int volume) const
+std::shared_ptr<Sound> AudioManager::createSound(std::string_view file_name, bool is_loop, float volume) const
 {
 	std::shared_ptr<Sound> sound = std::make_shared<Sound>(file_name, is_loop, volume);
 	_buffers.push_back(sound);
@@ -119,6 +122,22 @@ void AudioManager::update()
 	else
 	{
 		SDL_PauseAudioDevice(_audio_device, SDL_TRUE);
+	}
+}
+
+void AudioManager::set_volume(float volume) const
+{
+	if (volume > 1.0f)
+	{
+		_volume = 1.0f;
+	}
+	else if (volume < 0.0f)
+	{
+		_volume = 0.0f;
+	}
+	else
+	{
+		_volume = volume;
 	}
 }
 

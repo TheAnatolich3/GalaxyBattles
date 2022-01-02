@@ -9,7 +9,7 @@ Sound::~Sound()
 	SDL_FreeWAV(_data);
 }
 
-Sound::Sound(std::string_view filename, bool is_loop, int volume):
+Sound::Sound(std::string_view filename, bool is_loop, float volume):
 	_isLoop(is_loop), _volume(volume)
 {
 	SDL_RWops* file = SDL_RWFromFile(filename.data(), "rb");

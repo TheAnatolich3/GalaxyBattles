@@ -44,6 +44,7 @@ public:
 	[[nodiscard]] const AudioManager& audioManager() const;
 
 	std::shared_ptr<Node> scene();
+	std::shared_ptr<UIManager> UI_Manager();
 private:
 	
 	bool _isActive = false;
@@ -52,8 +53,7 @@ private:
 	std::unique_ptr<EventsManager> _eventsManager;
 	std::unique_ptr<AudioManager> _audioManager;
 	std::unique_ptr<Renderer> _renderer;
-	std::unique_ptr<UIManager> _UIManager;
-	
+	std::shared_ptr<UIManager> _UIManager;
 	std::shared_ptr<Node> _scene;
 };
 

@@ -8,7 +8,7 @@
 class Sound
 {
 public:
-	explicit Sound(std::string_view filename, bool is_loop, int volume);
+	explicit Sound(std::string_view filename, bool is_loop, float volume);
 	~Sound();
 
 	void play();
@@ -30,7 +30,7 @@ private:
 	size_t _pos = 0;
 	uint8_t* _data = nullptr;
 
-	int _volume = 0;
+	float _volume = 0;
 
 	SDL_AudioSpec _audio_spec_from_file{};
 	SDL_AudioSpec get_AudioFormat() const;

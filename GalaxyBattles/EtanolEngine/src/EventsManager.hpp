@@ -17,6 +17,7 @@ public:
 		A,
 		D,
 		Space,
+		Escape,
 		Unknown
 	};
 

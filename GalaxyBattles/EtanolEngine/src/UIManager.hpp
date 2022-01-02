@@ -5,6 +5,8 @@
 #include <Renderer.hpp>
 #include <glm/glm.hpp>
 #include <EventsManager.hpp>
+#include <MenuItem.hpp>
+
 
 class Engine;
 class Texture;
@@ -20,6 +22,14 @@ public:
 	void handle_event(EventsManager::MouseEvent) override;
 	void handle_event(EventsManager::TextInputEvent) override;
 	void handle_event(EventsManager::MouseWheelEvent) override;
+	void handle_event(EventsManager::KeyEvent) override;
+
+	void addMenuItem(std::shared_ptr<Menu::MenuItem> item);
+	void removeMenuItem(const std::shared_ptr<Menu::MenuItem>& item);
+	bool get_show_flag() const
+	{
+		return _show_menu;
+	}
 private:
 	const Engine& _engine;
 
@@ -29,7 +39,8 @@ private:
 	std::shared_ptr<Vec2Uniform> _screenSizeUniform;
 	std::shared_ptr<Mat3Uniform> _transformUniform;
 
-	bool show_demo_window = true;
+	bool _show_demo_window = false;
+	bool _show_menu = false;
 
 	bool _rMousePressed = false;
 	bool _lMousePressed = false;
@@ -38,6 +49,8 @@ private:
 	glm::vec2 _mousePos;
 
 	float _mouseWheel = 0.0f;
+
+	std::vector<std::shared_ptr<Menu::MenuItem>> _menuItems;
 };
 
 #endif UIMANAGER_HPP

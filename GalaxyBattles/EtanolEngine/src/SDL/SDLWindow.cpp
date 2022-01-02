@@ -85,6 +85,9 @@ void SDLWindow::update()
         case SDLK_d:
             code = EventsManager::KeyCode::D;
             break;
+        case SDLK_ESCAPE:
+            code = EventsManager::KeyCode::Escape;
+            break;
         default: break;
         }
         event_manager.invoke_event(EventsManager::KeyEvent{ code, type });

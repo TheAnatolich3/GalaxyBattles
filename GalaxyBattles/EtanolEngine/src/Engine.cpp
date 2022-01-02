@@ -3,6 +3,7 @@
 #include <Renderer.hpp>
 #include <Node.hpp>
 #include <memory>
+#include <MenuItem.hpp>
 #include "Engine.hpp"
 
 Engine::Engine() = default;
@@ -86,4 +87,9 @@ std::shared_ptr<Node> Engine::scene()
 const AudioManager& Engine::audioManager() const
 {
 	return *_audioManager;
+}
+
+std::shared_ptr<UIManager> Engine::UI_Manager()
+{
+	return _UIManager;
 }

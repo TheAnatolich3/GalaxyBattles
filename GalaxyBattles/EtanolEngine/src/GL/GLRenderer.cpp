@@ -58,7 +58,11 @@ void GLRenderer::draw()
 				}
 				else
 				{
-					glScissor(0, 0, _engine.get_window_width(), _engine.get_window_height());
+					glScissor(
+						0, 
+						0, 
+						static_cast<GLsizei>(_engine.get_window_width()), 
+						static_cast<GLsizei>(_engine.get_window_height()));
 				}
 
 				if (command.ren)
